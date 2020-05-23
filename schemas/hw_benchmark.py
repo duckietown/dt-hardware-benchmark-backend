@@ -6,6 +6,6 @@ class HWBenchmarkSchema(Schema):
     hw_benchmark_uuid = fields.UUID(dump_only = True)
     diagnostics = fields.Raw()
     meta = fields.Raw()
-    sdCard = fields.Raw()
+    sd_card = fields.Raw()
     bot_bag = fields.Raw()
 

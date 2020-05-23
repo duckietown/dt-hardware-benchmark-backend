@@ -2,19 +2,11 @@ from .query_parser import queryParser
 from .utility import schemaToDict
 from math import ceil
 
-class EndpointConfiguration: #Authorization to  be done here
+class EndpointConfiguration:
     def __init__(self, api, path, schema):
         self.api = api
         self.path = path
         self.model = api.model(path.title(), schemaToDict(schema))
-
-    def getRequest(self):
-        args = queryParser()
-        res = self.getSerializedResponse(**args)
-        return res, 200
-
-    def postRequest(self):
-        return {'result': self.path.title() + ' added.'}, 201
 
     def getSerializedResponse(self, page = 1, sort = None, perPage = 25, where = True):
         items = []
