@@ -2,6 +2,8 @@ from flask_restplus import Namespace, Resource
 from .template import EndpointConfiguration
 from .utility import queryDocumentation
 from s3.upload_file import upload_file
+from config import BATTERY_TYPES, BOT_TYPES
+import json
 
 from schemas.hw_benchmark import HWBenchmarkSchema
 
@@ -23,3 +25,12 @@ class HardwareBenchmarkFilesEndpoint(Resource):
         return {'result': hw_bm_config.path.title() + ' added.'}, 201
 
 
+hw_bm_meta_config = EndpointConfiguration(api, 'meta', HWBenchmarkSchema)
+
+@api.route('/'+hw_bm_meta_config.path)
+class HardwareBenchmarkFilesEndpoint(Resource):
+    @api.doc(params=queryDocumentation)
+    def get(self):
+        print("kjdkjdkjdkjkddk")
+        result = {'bot_types': BOT_TYPES, 'battey_types': BATTERY_TYPES}
+        return result
