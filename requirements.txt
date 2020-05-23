@@ -1,0 +1,12 @@
+wheel
+Flask
+flask-restplus
+marshmallow
+flask_cors
+boto3
+botocore
+python-dotenv
+
+Werkzeug==0.16.1 #Bear with it until Flask-restplus is fixed
+
+pylint
