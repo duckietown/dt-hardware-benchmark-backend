@@ -2,6 +2,6 @@ config.py
 venv/
 .aws
 .env
-.pyc
+*.pyc
 
 /**/__pycache__
