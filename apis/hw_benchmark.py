@@ -21,7 +21,7 @@ class HardwareBenchmarkFilesEndpoint(Resource):
 
     @api.expect(hw_bm_config.model)
     def post(self):
-        print(api.payload)
+        # print(api.payload)
         process_files_request(api.payload)
         return {'result': hw_bm_config.path.title() + ' added.'}, 201
 

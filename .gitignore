@@ -3,5 +3,7 @@ venv/
 .aws
 .env
 *.pyc
+temp.*
+*.bag
 
 /**/__pycache__

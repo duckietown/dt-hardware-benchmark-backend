@@ -6,6 +6,6 @@ class HWBenchmarkSchema(Schema):
     diagnostics_json = fields.Raw()
     meta_json = fields.Raw()
     sd_card_json = fields.Raw()
-    bot_bag = fields.Raw()
+    latencies_bag = fields.Raw()
     meta = fields.Raw()
 

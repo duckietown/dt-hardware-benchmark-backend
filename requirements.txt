@@ -1,3 +1,8 @@
+pyyaml
+rospkg
+pyrosbag
+
+
 wheel
 Flask
 flask-restplus
@@ -11,7 +16,6 @@ matplotlib
 numpy
 scipy
 
-pyrosbag
 
 Werkzeug==0.16.1 #Bear with it until Flask-restplus is fixed
 
