@@ -15,9 +15,7 @@ def upload_file(content, file_name):
     # Upload the file
     s3 = boto3.resource('s3')
     try:
-        response = s3.Object('hwbenchmark', file_name+'.txt').put(Body=content)
-        #response = s3_client.upload_file(file_name, bucket, object_name)
-        print(response)
+        response = s3.Object('hwbenchmark', file_name).put(Body=content)
     except ClientError as e:
         logging.error(e)
         return False

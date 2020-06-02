@@ -1,9 +1,10 @@
-config.py
+secrets.py
 venv/
 .aws
 .env
 *.pyc
 temp.*
 *.bag
+*.png
 
 /**/__pycache__

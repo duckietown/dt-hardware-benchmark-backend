@@ -71,9 +71,12 @@ def collect_data(data, meas, t):
             as well as doing statisical analysis
     """
     search_key = list(meas.keys())
-    search_key.remove('container')
-    search_key.remove('process')
-    
+    try:
+        search_key.remove('container')
+        search_key.remove('process')
+    except:
+        pass 
+        
     t0 = data['general']['time'] 
     for group_key, group_items in meas.items():
         for index, item in enumerate(group_items):
@@ -123,18 +126,19 @@ def collect_data(data, meas, t):
 def weight_function(x):
     a = 7.91E-4
     b = 1.732
-    return np.exp(a*x**b)
+    return np.exp(a*np.array(x)**b)
 
 def weighted_average_focus_high(x):
     total_weight = np.sum(weight_function(x))
     total = np.sum(x)
     return total/total_weight
 
-def collect_meta(data, meta_dict, meta_data, bot_type, battery_type):
+def collect_meta(data, meta_dict, meta_data, bot_type, battery_type, release):
     """collect metadata"""
     res = meta_data
     res['bot_type'] = bot_type
     res['battery_type'] = battery_type
+    res['release'] = release
     for key, item in meta_dict.items():
         res[key] = reduce(operator.getitem, item.split('.'), data)
     return res

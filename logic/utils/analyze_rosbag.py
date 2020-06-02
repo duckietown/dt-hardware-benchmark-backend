@@ -6,14 +6,11 @@ from rospy_message_converter import message_converter
 
 import os
 
-DUCKIENAME = 'autobot14'
-BAGNAME = 'master19_autobot14_01.bag'
-
 
 def stamp2time(stamp):
     return stamp.get('secs') + stamp.get('nsecs')/1000000000.0
 
-def retrieve_latencies(bag):
+def retrieve_latencies(bag, duckiename):
     lat = {'time': [], 'meas': []}
 
     find_msg_re = r'^(\[LineDetectorNode\] \d+:\sLatencies:\s)'
@@ -23,8 +20,8 @@ def retrieve_latencies(bag):
         temp = message_converter.convert_ros_message_to_dictionary(msg)
                         
         msg_string = temp.get('msg')
-        if temp.get('name') == '/{}/line_detector_node'.format(DUCKIENAME) and re.search(find_msg_re, temp.get('msg')):                  
-            time = Ros_Analyze.stamp2time(temp.get('header').get('stamp'))
+        if temp.get('name') == '/{}/line_detector_node'.format(duckiename) and re.search(find_msg_re, temp.get('msg')):                  
+            time = stamp2time(temp.get('header').get('stamp'))
             for line in msg_string.split('\n'):
                 if re.search(find_line_re,  line):
                     snippet = re.findall(find_line_re,  line)[0]
@@ -33,29 +30,29 @@ def retrieve_latencies(bag):
     return lat
 
 
-def retrieve_segment_count(bag):
+def retrieve_segment_count(bag, duckiename):
 
     segs = {'time': [], 'meas': []}
 
-    for _, msg, _ in bag.read_messages(topics=['/{}/line_detector_node/segment_list'.format(DUCKIENAME)]):
+    for _, msg, _ in bag.read_messages(topics=['/{}/line_detector_node/segment_list'.format(duckiename)]):
         temp = message_converter.convert_ros_message_to_dictionary(msg)
-        time = Ros_Analyze.stamp2time(temp.get('header').get('stamp'))
+        time = stamp2time(temp.get('header').get('stamp'))
         
         segs['time'].append(time)
         segs['meas'].append(len(temp.get('segments')))
     return segs
 
-def run():
+def run(bagname, duckiename, savetoJson=False):
 
-    with rosbag.Bag(BAGNAME, 'r') as bag:
-        print(bag.get_type_and_topic_info())
-        segs = retrieve_segment_count(bag)
-        lat = retrieve_latencies(bag)
-        
-    with open('{}_latencies.json'.format(BAGNAME), 'w') as file:
-        print(lat)
-        file.write(json.dumps(lat))
+    with rosbag.Bag(bagname, 'r') as bag:
+        segs = retrieve_segment_count(bag, duckiename)
+        lat = retrieve_latencies(bag, duckiename)
 
-    with open('{}_segment_counts.json'.format(BAGNAME), 'w') as file:
-        print(segs)
-        file.write(json.dumps(segs))
+    if savetoJson:    
+        with open('{}_latencies.json'.format(bagname), 'w') as file:
+            file.write(json.dumps(lat))
+
+        with open('{}_segment_counts.json'.format(bagname), 'w') as file:
+            file.write(json.dumps(segs))
+
+    return segs, lat
