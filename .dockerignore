@@ -1,0 +1,5 @@
+venv
+.devcontainer/
+__pycacher__/
+.gitignore
+README.md
