@@ -20,6 +20,7 @@ upload_parser = api.parser()
 upload_parser.add_argument('meta_json', location='files', type=FileStorage, required=True)
 upload_parser.add_argument('latencies_bag', location='files', type=FileStorage, required=True)
 upload_parser.add_argument('sd_card_json', location='files', type=FileStorage, required=True)
+upload_parser.add_argument('localization_bag', location='files', type=FileStorage, required=False)
 upload_parser.add_argument('meta', required=True)
 
 frontend_parser = api.parser()
@@ -27,6 +28,7 @@ frontend_parser.add_argument('diagnostics_json', location='files', type=FileStor
 frontend_parser.add_argument('latencies_bag', location='files', type=FileStorage, required=True)
 frontend_parser.add_argument('meta_json', location='files', type=FileStorage, required=True)
 frontend_parser.add_argument('sd_card_json', location='files', type=FileStorage, required=True)
+frontend_parser.add_argument('localization_bag', location='files', type=FileStorage, required=False)
 frontend_parser.add_argument('meta', required=True)
 
 get_parser = api.parser()

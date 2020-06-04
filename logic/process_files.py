@@ -33,10 +33,6 @@ def process_files_request(args, hw_bm_file_key=None):
     
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
-
-    
-    print(args['meta'])
-    print(args['meta'])
     meta_req = json.loads(args['meta'])
     latencies_bag_req = args['latencies_bag'].read()
 
@@ -62,6 +58,9 @@ def process_files_request(args, hw_bm_file_key=None):
         upload_file(content, 'meas/'+filename)
         summary = export_summary_json(collected_data, collected_meta, overall)
         upload_file(summary, 'summary/'+filename)
+
+        if args['localization_bag'] is not None:
+            upload_file(args['localization_bag'].read(), 'loc/%s.bag' % id)
 
     finally:
         subprocess.run(["rm", bagname])
