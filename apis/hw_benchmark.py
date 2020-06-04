@@ -17,11 +17,17 @@ from s3.list_files import list_files, get_file
 api = Namespace('hw_benchmark', description='Request related to Hardware Benchmarks')
 
 upload_parser = api.parser()
-upload_parser.add_argument('diagnostics_json', location='files', type=FileStorage, required=True)
-upload_parser.add_argument('latencies_bag', location='files', type=FileStorage, required=True)
 upload_parser.add_argument('meta_json', location='files', type=FileStorage, required=True)
+upload_parser.add_argument('latencies_bag', location='files', type=FileStorage, required=True)
 upload_parser.add_argument('sd_card_json', location='files', type=FileStorage, required=True)
 upload_parser.add_argument('meta', required=True)
+
+frontend_parser = api.parser()
+frontend_parser.add_argument('diagnostics_json', location='files', type=FileStorage, required=True)
+frontend_parser.add_argument('latencies_bag', location='files', type=FileStorage, required=True)
+frontend_parser.add_argument('meta_json', location='files', type=FileStorage, required=True)
+frontend_parser.add_argument('sd_card_json', location='files', type=FileStorage, required=True)
+frontend_parser.add_argument('meta', required=True)
 
 get_parser = api.parser()
 get_parser.add_argument('page')
@@ -35,11 +41,19 @@ class HardwareBenchmarkFilesEndpoint(Resource):
         args = get_parser.parse_args()
         return list_files(args['page']), 200
         #return hw_bm_config.getRequest()
-
-    @api.expect(upload_parser)
+    @api.expect(frontend_parser)
     def post(self):
-        args = upload_parser.parse_args()
+        args = frontend_parser.parse_args()
         process_files_request(args)
+        return {'result': hw_bm_config.path.title() + ' added.'}, 201
+
+
+@api.route('/'+hw_bm_config.path+'/<hw_bm_file_key>')
+class HardwareBenchmarkFilesEndpointFromDiagnostics(Resource):
+    @api.expect(upload_parser)
+    def post(self, hw_bm_file_key):
+        args = upload_parser.parse_args()
+        process_files_request(args, hw_bm_file_key)
         return {'result': hw_bm_config.path.title() + ' added.'}, 201
 
 @api.route('/'+hw_bm_config.path+'/<id>')

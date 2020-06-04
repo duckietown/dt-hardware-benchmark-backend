@@ -2,24 +2,41 @@ import uuid
 import json
 import subprocess
 import numpy as np
+import requests
 
 from s3.upload_file import upload_file
 from .utils.analyze_rosbag import run
 from .utils.data_collection import collect_data, collect_meta
 from .utils.export import export_json, export_summary_json
 from .config.master19 import meta, measurements
+from secrets import APP_SECRET, APP_ID
+from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
+
 
 def storage2json(fs, args):
     return json.loads(str(args[fs].read().decode('ascii')))
 
-def process_files_request(args):
+def process_files_request(args, hw_bm_file_key=None):
     
     id = uuid.uuid1()
 
-    diagnostics_json_req = storage2json('diagnostics_json', args)
+    if hw_bm_file_key is None:
+        diagnostics_json_req = storage2json('diagnostics_json', args)
+    else: 
+        url = '{}/json?app_id={}&app_secret={}&database={}&key={}'.format(
+            DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key
+        )
+        req = requests.get(url)
+        diagnostics_json_req = req.json()['data']['value']
+        with open('test.json', 'w+') as file:
+            file.write(json.dumps(diagnostics_json_req))
+    
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
 
+    
+    print(args['meta'])
+    print(args['meta'])
     meta_req = json.loads(args['meta'])
     latencies_bag_req = args['latencies_bag'].read()
 
