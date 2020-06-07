@@ -14,15 +14,31 @@ from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
 
 def storage2json(fs, args):
+    """turns filestorage to json
+
+    Args:
+        fs (string): name of file storage in args
+        args (parser.args): args of a restplus parser
+
+    Returns:
+        dict: dict containing json data
+    """
     return json.loads(str(args[fs].read().decode('ascii')))
 
 def process_files_request(args, hw_bm_file_key=None):
+    """Takes all files from the requiest, performs the benchmark analysis and saves them to s3
+
+    Args:
+        args (parser.args): args of resplus parser
+        hw_bm_file_key (string, optional): Key to . Defaults to None.
+    """
     
     id = uuid.uuid1()
 
     if hw_bm_file_key is None:
         diagnostics_json_req = storage2json('diagnostics_json', args)
     else: 
+        #Get Data from diagnostics API
         url = '{}/json?app_id={}&app_secret={}&database={}&key={}'.format(
             DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key
         )
