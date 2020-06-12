@@ -1,12 +1,12 @@
+"""Module formatting the data in order to save, calculates the std, mneand, etc"""
 from functools import reduce
 import operator
 import json
-import base64
 import numpy as np
 from scipy import interpolate
 
 
-def retrieve_from_extern(data, keys, format, t0, calc=None):
+def retrieve_from_extern(data, keys, format_, t0, calc=None):
     """ helper function retrieving one measurement,
             doing formatting and calculating
     """
@@ -14,14 +14,14 @@ def retrieve_from_extern(data, keys, format, t0, calc=None):
     res = []
     time = []
     for i, meas in enumerate(data[k]):
-        formatted = float(meas if not format else format(meas))
+        formatted = float(meas if not format_ else format_(meas))
         sol = [calc(formatted)] if calc else [formatted]
         res.append(sol[0])
         time.append(data['time'][i] - t0)
     return time, res
 
 
-def retrieve_from_keys(data, group, keys, format, calc=None):
+def retrieve_from_keys(data, group, keys, format_, calc=None):
     """ helper function retrieving one measurement,
             doing formatting and calculating
     """
@@ -32,7 +32,7 @@ def retrieve_from_keys(data, group, keys, format, calc=None):
         for key in keys:
             print(key.split('.'))
             reduced = reduce(operator.getitem, key.split('.'), meas)
-            local_res.append(float(reduced if not format else format(reduced)))
+            local_res.append(float(reduced if not format_ else format_(reduced)))
         sol = [calc(*local_res)] if calc else local_res
         res[i] = sol[0]
     return res
@@ -43,7 +43,7 @@ def retrieve_from_containers(
         group,
         container,
         keys,
-        format,
+        format_,
         t0,
         calc=None):
     """ helper function retrieving one measurement,
@@ -54,20 +54,20 @@ def retrieve_from_containers(
     container_id = ''
 
     for key, cont in data['containers'].items():
-        if (cont == container):
+        if cont == container:
             container_id = key
             break
 
     key = 'process_stats' if group == 'process' else 'container_stats'
 
     for meas in data[key]:
-        if (meas['container'] == container_id):
+        if meas['container'] == container_id:
             local_res = []
             for key in keys:
                 reduced = reduce(operator.getitem, key.split('.'), meas)
                 local_res.append(
                     float(
-                        reduced if not format else format(reduced)))
+                        reduced if not format_ else format_(reduced)))
             sol = [calc(*local_res)] if calc else local_res
 
             t = meas['time'] - t0
@@ -89,7 +89,7 @@ def collect_data(data, meas, t):
     try:
         search_key.remove('container')
         search_key.remove('process')
-    except BaseException:
+    except ValueError:
         pass
 
     with open("testrr.json", "w+") as file:
@@ -148,12 +148,21 @@ def collect_data(data, meas, t):
 
 
 def weight_function(x):
+    """Weight function punishing the upper outliers 10 more than lower
+
+    Args:
+        x (np.array): array of which the weighing function is claculated, uses values between 0 and 100
+
+    Returns:
+        np.array: weight per entry
+    """
     a = 7.91E-4
     b = 1.732
     return np.exp(a * np.array(x)**b)
 
 
 def weighted_average_focus_high(x):
+    """Calculates weighted average"""
     total_weight = np.sum(weight_function(x))
     total = np.sum(weight_function(x) * x)
     return total / total_weight

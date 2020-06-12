@@ -1,25 +1,28 @@
+"""Collection  of api utilities"""
 from flask_restplus import fields
 import marshmallow
 
+
 def schemaToDict(schema):
-	sc_fields = schema._declared_fields
-	modelInfo = {}
-	for field_name in sc_fields:
-		if not sc_fields[field_name].dump_only:
-			marshType = type(sc_fields[field_name])
-			if marshType == marshmallow.fields.String:
-				modelInfo[field_name] = fields.String
-			elif marshType == marshmallow.fields.Integer:
-				modelInfo[field_name] = fields.Integer
-			elif marshType == marshmallow.fields.DateTime:
-				modelInfo[field_name] = fields.DateTime
-			elif marshType == marshmallow.fields.Boolean:
-				modelInfo[field_name] = fields.Boolean
-			elif marshType == marshmallow.fields.Float:
-				modelInfo[field_name] = fields.Float
-			elif marshType == marshmallow.fields.Raw:
-				modelInfo[field_name] = fields.Raw
-	return modelInfo
+    """Converts schema to dict"""
+    sc_fields = schema._declared_fields
+    model_info = {}
+    for field_name in sc_fields:
+        if not sc_fields[field_name].dump_only:
+            marsh_type = type(sc_fields[field_name])
+            if marsh_type == marshmallow.fields.String:
+                model_info[field_name] = fields.String
+            elif marsh_type == marshmallow.fields.Integer:
+                model_info[field_name] = fields.Integer
+            elif marsh_type == marshmallow.fields.DateTime:
+                model_info[field_name] = fields.DateTime
+            elif marsh_type == marshmallow.fields.Boolean:
+                model_info[field_name] = fields.Boolean
+            elif marsh_type == marshmallow.fields.Float:
+                model_info[field_name] = fields.Float
+            elif marsh_type == marshmallow.fields.Raw:
+                model_info[field_name] = fields.Raw
+    return model_info
 
 
 queryDocumentation = {

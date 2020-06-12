@@ -1,3 +1,4 @@
+"""Handles Communitation to s3 in order to upload file"""
 import logging
 import boto3
 from botocore.exceptions import ClientError
@@ -16,7 +17,8 @@ def upload_file(content, file_name):
     s3 = boto3.resource('s3')
     try:
         response = s3.Object('hwbenchmark', file_name).put(Body=content)
-    except ClientError as e:
-        logging.error(e)
+        print(response)
+    except ClientError as exc:
+        logging.error(exc)
         return False
     return True

@@ -31,5 +31,6 @@ Linting:
 ```bash
 pip install -r requirements-dev.txt
 pylint --load-plugins pylint_flask apis/ logic/ s3/ schemas/ app.py
+autopep8 --in-place --aggressiv --aggressiv --recursive apis/ logic/ s3/ schemas/ app.py
 ```
 

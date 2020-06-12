@@ -1,11 +1,11 @@
+"""HW Benchmark schema, will be used for Mysqldb- communication"""
 from marshmallow import Schema, fields
-import werkzeug
-from flask_restplus import reqparse
 
 class HWBenchmarkSchema(Schema):
+    """Expected schema, WIP
+    """
     diagnostics_json = fields.Raw()
     meta_json = fields.Raw()
     sd_card_json = fields.Raw()
     latencies_bag = fields.Raw()
     meta = fields.Raw()
-

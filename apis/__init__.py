@@ -1,13 +1,15 @@
+"""REST API initialization
+"""
 from flask_restplus import Api
 
 from .hw_benchmark import api as hw_benchmark
 
 authorizations = {
-	'duckietown-token' :{
-		'type': 'apiKey',
-		'in': 'header',
-		'name': 'X-DUCKIETOWN-TOKEN'
-	}
+    'duckietown-token': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'X-DUCKIETOWN-TOKEN'
+    }
 }
 
 api = Api(

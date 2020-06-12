@@ -3,16 +3,19 @@
 import uuid
 import json
 import subprocess
+
+from secrets import APP_SECRET, APP_ID
+
 import numpy as np
 import requests
+
+from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
 from s3.upload_file import upload_file
 from .utils.analyze_rosbag import run
 from .utils.data_collection import collect_data, collect_meta
 from .utils.export import export_json, export_summary_json
 from .config.master19 import meta, measurements
-from secrets import APP_SECRET, APP_ID
-from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
 
 def storage2json(filestorage, args):
