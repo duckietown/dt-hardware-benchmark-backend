@@ -32,6 +32,18 @@ def process_files_request(args, hw_bm_file_key=None):
         args (parser.args): args of resplus parser
         hw_bm_file_key (string, optional): Key to . Defaults to None.
     """
+
+    """
+    let log_url = '{0}/script.php?package={1}&script={2}&database={3}&key={4}'.format(
+        "",
+        "duckietown",
+        "download_diagnostics_log",
+        "db_log_default",
+        key
+    );
+    // download log
+    window.open(log_url, '_blank');
+    """
     
     id = uuid.uuid1()
 
@@ -44,8 +56,16 @@ def process_files_request(args, hw_bm_file_key=None):
         )
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
+        health_url = "{}/seek=health".format(url)
+        req_health = requests.get(health_url)
+        health_json = req.json()['data']['value']
+
+        diagnostics_json_req['health'] = health_json
+
         with open('test.json', 'w+') as file:
             file.write(json.dumps(diagnostics_json_req))
+        with open('test_health.json', 'w+') as file:
+            file.write(json.dumps(health_json))
     
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
@@ -80,4 +100,6 @@ def process_files_request(args, hw_bm_file_key=None):
 
     finally:
         subprocess.run(["rm", bagname])
+    
+    return uuid
     

@@ -23,10 +23,12 @@ def retrieve_from_keys(data, group, keys, format, calc=None):
     """ helper function retrieving one measurement,
             doing formatting and calculating
     """ 
+    print("line 26" + group)
     res = np.zeros(len(data[group]))
     for i, meas in enumerate(data[group]):
         local_res = []
         for key in keys:
+            print(key.split('.'))
             reduced = reduce(operator.getitem, key.split('.'), meas)
             local_res.append(float(reduced if not format else format(reduced)))
         sol = [calc(*local_res)] if calc else local_res
@@ -76,6 +78,9 @@ def collect_data(data, meas, t):
         search_key.remove('process')
     except:
         pass 
+
+    with open("testrr.json", "w+") as file:
+        file.write(json.dumps(data)); 
         
     t0 = data['general']['time'] 
     for group_key, group_items in meas.items():
@@ -110,17 +115,19 @@ def collect_data(data, meas, t):
             else:
                 y_ip = y * len(t)
 
+            print(group_key, index, item, y)
             meas[group_key][index]['t'] = t_meas
             meas[group_key][index]['measurement'] = y
             meas[group_key][index]['measurement_ip'] = y_ip
             meas[group_key][index]['info'] = meas[group_key][index].get('info') if meas[group_key][index].get('info') else ""
             meas[group_key][index]['info'] += "!! time not synced !!" if item.get('t0') else ""
-            meas[group_key][index]['min'] = np.min(y)
-            meas[group_key][index]['max'] = np.max(y)
-            meas[group_key][index]['mean'] = np.mean(y, dtype=np.float64)
-            meas[group_key][index]['weighted_avg'] = weighted_average_focus_high(y)
-            meas[group_key][index]['median'] = np.median(y)
-            meas[group_key][index]['std'] = np.std(y, dtype=np.float64)
+            if y is not None and len(y) > 0:
+                meas[group_key][index]['min'] = np.min(y)
+                meas[group_key][index]['max'] = np.max(y)
+                meas[group_key][index]['mean'] = np.mean(y, dtype=np.float64)
+                meas[group_key][index]['weighted_avg'] = weighted_average_focus_high(y)
+                meas[group_key][index]['median'] = np.median(y)
+                meas[group_key][index]['std'] = np.std(y, dtype=np.float64)
     return meas
 
 def weight_function(x):
@@ -130,7 +137,7 @@ def weight_function(x):
 
 def weighted_average_focus_high(x):
     total_weight = np.sum(weight_function(x))
-    total = np.sum(x)
+    total = np.sum(weight_function(x)*x)
     return total/total_weight
 
 def collect_meta(data, meta_dict, meta_data, bot_type, battery_type, release):

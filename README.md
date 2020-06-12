@@ -26,4 +26,10 @@ python app.py
 ```
 Have fun developing.
 
+Linting:
+
+```bash
+pip install -r requirements-dev.txt
+pylint --load-plugins pylint_flask apis/ logic/ s3/ schemas/ app.py
+```
 
