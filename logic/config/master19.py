@@ -1,6 +1,7 @@
-from scipy  import interpolate
+from scipy import interpolate
 
-def measurements(data_latency, data_segments, data_sd_card) :
+
+def measurements(data_latency, data_segments, data_sd_card):
     return {
         'diagnostics': {
             'resources_stats': [
@@ -9,17 +10,17 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'ylabel': 'RAM',
                     'ylim': (0, 100),
                     'keys': ['memory.used', 'memory.total'],
-                    'calc': lambda x, y: 100*x/y,
+                    'calc': lambda x, y: 100 * x / y,
                     'export_name': 'ram_p',
                     'unit': '%',
-                    
+
                 },
                 {
                     'name': 'Swap in Percent',
                     'ylabel': 'Swap',
                     'ylim': (0, 100),
                     'keys': ['swap.used', 'swap.total'],
-                    'calc': lambda x, y: 100*x/y,
+                    'calc': lambda x, y: 100 * x / y,
                     'export_name': 'swap_p',
                     'unit': '%',
                 },
@@ -32,7 +33,7 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'unit': '%',
                 },
             ],
-            'health':[
+            'health': [
                 {
                     'name': 'Status',
                     'ylabel': 'Status [ok, warn, error]',
@@ -75,7 +76,7 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'name': 'Core Clock',
                     'ylabel': 'Core',
                     'ylim': (0, 600),
-                    'calc': lambda x: x/1000000,
+                    'calc': lambda x: x / 1000000,
                     'keys': ['clock.core'],
                     'export_name': 'cpu_core_clock',
                     'unit': 'MHz',
@@ -84,13 +85,13 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'name': 'ARM Clock',
                     'ylabel': 'ARM',
                     'ylim': (0, 2000),
-                    'calc': lambda x: x/1000000,
+                    'calc': lambda x: x / 1000000,
                     'keys': ['clock.arm'],
                     'export_name': 'cpu_arm_clock',
                     'unit': '?',
                 },
             ],
-            'process':[
+            'process': [
                 {
                     'name': 'Portainer Threads',
                     'ylabel': 'Threads',
@@ -112,13 +113,13 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'export_name': 'db_dashboard_threads',
                     'unit': '#',
                 },
-                #{
+                # {
                 #    'name': 'Device-online Threads',
                 #    'ylabel': 'Threads',
                 #    'keys': ['dt18_01_health_stats_rpi-duckiebot-online_1.nthreads'],
                 #    'export_name': 'device_online_threads',
                 #    'unit': '#',
-                #},
+                # },
                 {
                     'name': 'Health Threads',
                     'ylabel': 'Threads',
@@ -140,20 +141,20 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'export_name': 'rosbridge_websocket_threads',
                     'unit': '#',
                 },
-                #{
+                # {
                 #    'name': 'DB Loader Threads',
                 #    'ylabel': 'Threads',
                 #    'keys': ['dt18_01_health_stats_rpi-duckiebot-loader_1.nthreads'],
                 #    'export_name': 'db_loader_threads',
                 #    'unit': '#',
-                #},
-                #{
+                # },
+                # {
                 #    'name': 'Demo_base Threads',
                 #    'ylabel': 'Threads',
                 #    'keys': ['demo_base.nthreads'],
                 #    'export_name': 'demo_base_threads',
                 #    'unit': '#',
-                #},
+                # },
                 {
                     'name': 'Demo_lane_following Threads',
                     'ylabel': 'Threads',
@@ -169,16 +170,16 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'unit': '#',
                 },
                 # Useless as the Process is run on host PC
-                #{
+                # {
                 #    'name': 'Dts-run-diagnostics-system-monitor Threads',
                 #    'ylabel': 'Threads',
                 #    'ylim': (0, 15),
                 #    'keys': ['dts-run-diagnostics-system-monitor.nthreads'],
                 #   'export_name': 'dts_run_diagnostics_system_monitor_threads',
                 #    'unit': '#',
-                #},
+                # },
             ],
-            'container':[
+            'container': [
                 {
                     'name': 'Portainer CPU in Percent',
                     'ylabel': 'CPU',
@@ -186,13 +187,13 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'export_name': 'portainer_pcpu',
                     'unit': '%',
                 },
-                #{
+                # {
                 #    'name': 'Watchtower CPU in Percent',
                 #    'ylabel': 'CPU',
                 #    'keys': ['watchtower.pcpu'],
                 #    'export_name': 'watchtower_pcpu',
                 #    'unit': '%',
-                #},
+                # },
                 {
                     'name': 'Duckiebot-dashboard CPU in Percent',
                     'ylabel': 'CPU',
@@ -264,7 +265,7 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'unit': '%',
                 },
             ],
-            'extern':[
+            'extern': [
                 {
                     'name': 'Lane detector node latency',
                     'data': data_latency,
@@ -310,7 +311,7 @@ def measurements(data_latency, data_segments, data_sd_card) :
                     'calc': lambda x, y: 100*x/y,
                     'export_name': 'ram_p',
                     'unit': '%',
-                    
+
                 },
                 {
                     'name': 'Swap in Percent',
@@ -588,10 +589,11 @@ def measurements(data_latency, data_segments, data_sd_card) :
         }
     }"""
 
+
 meta = {
     'time': 'general.time_iso',
     'target': 'general.target',
-    'duration':'general.duration',
+    'duration': 'general.duration',
     'cores': 'endpoint.NCPU',
     'mem': 'endpoint.MemTotal',
 }

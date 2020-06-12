@@ -1,7 +1,9 @@
+""" API processing BM files
+"""
 from flask import Flask
-from apis import api
 from flask_cors import CORS
-import config
+from apis import api
+from config import HOST
 
 
 app = Flask(__name__)
@@ -10,4 +12,4 @@ api.init_app(app)
 
 
 if __name__ == '__main__':
-	app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host=HOST)

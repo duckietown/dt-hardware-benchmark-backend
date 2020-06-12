@@ -125,8 +125,6 @@ disable=print-statement,
         invalid-str-codec,
         sys-max-int,
         bad-python3-import,
-        deprecated-string-function,
-        deprecated-str-translate-call,
         deprecated-itertools-function,
         deprecated-types-field,
         next-method-defined,
@@ -138,7 +136,10 @@ disable=print-statement,
         xreadlines-attribute,
         deprecated-sys-function,
         exception-escape,
-        comprehension-escape
+        comprehension-escape,
+        relative-beyond-top-level,
+        import-error,
+        no-name-in-module
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
