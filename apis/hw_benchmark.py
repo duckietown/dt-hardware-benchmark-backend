@@ -115,7 +115,7 @@ class HardwareBenchmarkFilesEndpointFromDiagnostics(Resource):
         """
         args = upload_parser.parse_args()
         uuid = process_files_request(args, hw_bm_file_key)
-        return {'result': hw_bm_config.path.title() + ' added as' + uuid, 'uuid': uuid}, 201
+        return {'result': hw_bm_config.path.title() + ' added as' + str(uuid), 'uuid': str(uuid)}, 201
 
 
 

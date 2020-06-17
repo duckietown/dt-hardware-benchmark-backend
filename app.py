@@ -24,9 +24,13 @@ db.app = app
 db.create_all()
 api.init_app(app)
 
+CRED = '\033[4;35m'
+CEND = '\033[0m'
 
 if __name__ == '__main__':
     if os.getenv('LOCAL'):
-        print('running in local version, data is saved to /data')
+        print(CRED + '\nrunning in local mode, data is saved to and read from /data\n' + CEND)
+    else:
+        print(CRED + '\nrunning in online mode\n' + CEND)
 
     app.run(debug=True, host=HOST)

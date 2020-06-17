@@ -47,19 +47,13 @@ def process_files_request(args, hw_bm_file_key=None):
         # Get Data from diagnostics API
         url = '{}/json?app_id={}&app_secret={}&database={}&key={}'.format(
             DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key)
+        print(url)
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
-        health_url = "{}/seek=health".format(url)
-        req_health = requests.get(health_url)
-        health_json = req_health.json()['data']['value']
-
-        diagnostics_json_req['health'] = health_json
 
         with open('test.json', 'w+') as file:
             file.write(json.dumps(diagnostics_json_req))
-        with open('test_health.json', 'w+') as file:
-            file.write(json.dumps(health_json))
-
+            
     #read all bm data submitted
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
