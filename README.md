@@ -1,7 +1,12 @@
 ## Deploy
 ```bash
 docker build . -t bm_backend
-docker run -dit -p 5000:5000 bm_backend
+docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url -e MYSQL_DB=db bm_backend
+```
+
+## Run locally
+```bash
+docker run -dit -p 5000:5000 -e LOCAL=true -v/data:/~/data bm_backend
 ```
 
 ## Send data from CLI

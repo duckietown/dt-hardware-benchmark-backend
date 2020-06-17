@@ -9,14 +9,16 @@ import os
 
 
 if os.getenv('LOCAL'):
-    databaseUri = 'sqlite:////data/hw_bm.db'
+    database_uri = 'sqlite:////data/hw_bm.db'
 else:
-    databaseUri = 'mysql://'+mysqlConfig.user+':'+mysqlConfig.pw+'@'+mysqlConfig.server+'/'+mysqlConfig.database
+    assert os.getenv('MYSQL_USER') and os.getenv('MYSQL_PW') and os.getenv('MYSQL_URL') and os.getenv('MYSQL_DB'), "missing env variables"
+    database_uri = 'mysql://'+os.getenv('MYSQL_USER')+':'+os.getenv('MYSQL_PW')+'@'+os.getenv('MYSQL_URL')+'/'+os.getenv('MYSQL_DB')
+
 
 
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = databaseUri
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 db.init_app(app)
 db.app = app
 db.create_all()

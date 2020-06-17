@@ -39,18 +39,6 @@ def process_files_request(args, hw_bm_file_key=None):
         hw_bm_file_key (string, optional): Key to . Defaults to None.
     """
 
-    """
-    let log_url = '{0}/script.php?package={1}&script={2}&database={3}&key={4}'.format(
-        "",
-        "duckietown",
-        "download_diagnostics_log",
-        "db_log_default",
-        key
-    );
-    // download log
-    window.open(log_url, '_blank');
-    """
-
     bm_uuid = uuid.uuid1()
 
     if hw_bm_file_key is None:
@@ -72,6 +60,7 @@ def process_files_request(args, hw_bm_file_key=None):
         with open('test_health.json', 'w+') as file:
             file.write(json.dumps(health_json))
 
+    #read all bm data submitted
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
     meta_req = json.loads(args['meta'])
@@ -82,6 +71,7 @@ def process_files_request(args, hw_bm_file_key=None):
     filename = '%s.json' % bm_uuid
 
     try:
+        #analyze rosbag
         with open(bagname, 'wb') as bag:
             bag.write(latencies_bag_req)
 
@@ -98,6 +88,7 @@ def process_files_request(args, hw_bm_file_key=None):
 
         print(meta_req)
 
+        #prepare saving of data.
         collected_meta = collect_meta(
             diagnostics_json_req,
             meta,
@@ -110,6 +101,7 @@ def process_files_request(args, hw_bm_file_key=None):
                 lat, segs, sd_card_json_req)['diagnostics'], t)
         overall = [{'name': 'CPU', 'score': 100}, {'name': 'Ram', 'score': 20}]
 
+        #upload
         content = export_json(collected_data, collected_meta, t)
         upload_file(content, 'meas/' + filename)
         summary = export_summary_json(collected_data, collected_meta, overall)
@@ -122,6 +114,7 @@ def process_files_request(args, hw_bm_file_key=None):
                 bm_uuid)
 
     finally:
+        #cleanup
         subprocess.Popen(["rm", bagname])
 
     return bm_uuid
