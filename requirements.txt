@@ -11,9 +11,10 @@ botocore==1.17.1
 python-dotenv==0.13.0
 requests==2.23.0
 
-matplotlib==3.2.1
+matplotlib==3.0.3
 numpy==1.18.5
 scipy==1.4.1
 
+flask_sqlalchemy
 
 Werkzeug==0.16.1 #Bear with it until Flask-restplus is fixed

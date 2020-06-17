@@ -3,7 +3,7 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
-from s3.list_files import get_file
+from files.list_files import get_file
 
 
 def display_data(meas, t):

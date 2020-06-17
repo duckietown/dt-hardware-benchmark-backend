@@ -6,7 +6,7 @@ from werkzeug.datastructures import FileStorage
 from schemas.hw_benchmark import HWBenchmarkSchema
 from logic.process_files import process_files_request
 from logic.utils.create_plots import render_image
-from s3.list_files import list_files, get_file
+from files.list_files import list_files, get_file
 
 from config import BATTERY_TYPES, BOT_TYPES, RELEASES
 from .template import EndpointConfiguration
@@ -98,7 +98,7 @@ class HardwareBenchmarkFilesEndpoint(Resource):
         """
         args = frontend_parser.parse_args()
         uuid = process_files_request(args)
-        return {'result': hw_bm_config.path.title() + ' added as' + uuid, 'uuid': uuid}, 201
+        return {'result': hw_bm_config.path.title() + ' added as' + str(uuid), 'uuid': str(uuid)}, 201
 
 
 @api.route('/' + hw_bm_config.path + '/<hw_bm_file_key>')

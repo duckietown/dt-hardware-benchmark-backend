@@ -6,5 +6,7 @@ venv/
 temp.*
 *.bag
 *.png
+temp/*
 
 /**/__pycache__
+testrr.json

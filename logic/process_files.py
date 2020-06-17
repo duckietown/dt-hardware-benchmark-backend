@@ -11,7 +11,7 @@ import requests
 
 from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
-from s3.upload_file import upload_file
+from files.upload_file import upload_file, upload_summary
 from .utils.analyze_rosbag import run
 from .utils.data_collection import collect_data, collect_meta
 from .utils.export import export_json, export_summary_json
@@ -96,6 +96,8 @@ def process_files_request(args, hw_bm_file_key=None):
                 200),
             decimals=2)
 
+        print(meta_req)
+
         collected_meta = collect_meta(
             diagnostics_json_req,
             meta,
@@ -111,7 +113,7 @@ def process_files_request(args, hw_bm_file_key=None):
         content = export_json(collected_data, collected_meta, t)
         upload_file(content, 'meas/' + filename)
         summary = export_summary_json(collected_data, collected_meta, overall)
-        upload_file(summary, 'summary/' + filename)
+        upload_summary(bm_uuid, json.loads(summary))
 
         if args['localization_bag'] is not None:
             upload_file(
