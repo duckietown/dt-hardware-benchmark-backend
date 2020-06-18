@@ -1,6 +1,5 @@
 from scipy import interpolate
 
-
 def measurements(data_latency, data_segments, data_sd_card):
     return {
         'diagnostics': {
@@ -42,12 +41,14 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['status'],
                     'export_name': 'status_tribool',
                     'unit': ' ',
-                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False)
+                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
+                    'avg_multiplier': 50,
+                    #'avg_weigh_lower': True
                 },
                 {
                     'name': 'CPU Temperature',
                     'ylabel': 'CPU',
-                    'ylim': (0, 120),
+                    'ylim': (0, 100),
                     'format': lambda i: i[0:-2],
                     'keys': ['temp'],
                     'export_name': 'cpu_temp_c',
@@ -61,6 +62,8 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['volts.core'],
                     'export_name': 'cpu_core_v',
                     'unit': 'V',
+                    'avg_weigh_lower': True,
+                    'avg_multiplier': 100/1.5,
                 },
                 {
                     'name': 'Throttling',
@@ -70,7 +73,8 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['throttled_humans.throttling-now'],
                     'export_name': 'throttling_bool',
                     'unit': ' ',
-                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False)
+                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
+                    'avg_multiplier': 100,
                 },
                 {
                     'name': 'Core Clock',
@@ -80,6 +84,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['clock.core'],
                     'export_name': 'cpu_core_clock',
                     'unit': 'MHz',
+                    'avg_multiplier': 1/6,
                 },
                 {
                     'name': 'ARM Clock',
@@ -89,24 +94,72 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['clock.arm'],
                     'export_name': 'cpu_arm_clock',
                     'unit': '?',
+                    'avg_multiplier': 1/20,
                 },
             ],
-            'containers_cfg': [ 
+            'containers_cfg': [
                 {
-                    'base_name' : ' Threads',
+                    'base_name': ' Threads',
                     'ylabel': 'Threads',
                     'keys': 'process_stats.nthreads',
                     'unit': '#',
                 },
 
                 {
-                    'base_name' : ' CPU in Percent',
+                    'base_name': ' CPU in Percent',
                     'ylabel': 'CPU',
                     'keys': 'container_stats.pcpu',
                     'unit': '%',
-                },            
+                }
+            ],
+            'extern': [
+                {
+                    'name': 'Lane detector node latency',
+                    'data': data_latency,
+                    'ylabel': 'Latency',
+                    'ylim': (0, 1000),
+                    't0': min(data_latency.get('time')),
+                    'keys': ['meas'],
+                    'export_name': 'ldn_latency',
+                    'unit': 'ms',
+                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
+                    'avg_multiplier': .1,
+                },
+                {
+                    'name': 'Detected Segments',
+                    'data': data_segments,
+                    'ylabel': 'Segments',
+                    't0': min(data_segments.get('time')),
+                    'keys': ['meas'],
+                    'export_name': 'ldn_segments',
+                    'unit': '#',
+                    'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
+                    'avg_multiplier': 100/75,
+                },
+                {
+                    'name': 'SD-Card Write Speed',
+                    'data': data_sd_card,
+                    'ylabel': 'Write Speed',
+                    'notime': True,
+                    'keys': ['write'],
+                    'export_name': 'sd_card_write_speed',
+                    'unit': 'MB/s',
+                    'avg_multiplier': 10,
+                    'avg_weigh_lower': True,
+                },
+                {
+                    'name': 'SD-Card Read Speed',
+                    'data': data_sd_card,
+                    'ylabel': 'Write Speed',
+                    'notime': True,
+                    'keys': ['read'],
+                    'export_name': 'sd_card_read_speed',
+                    'unit': 'MB/s',
+                    'avg_multiplier': 10,
+                    'avg_weigh_lower': True,
+                },
             ]
-        }
+        },
     }
 
 meta = {
@@ -114,5 +167,5 @@ meta = {
     'target': 'general.target',
     'duration': 'general.duration',
     'cores': 'endpoint.NCPU',
-    'mem': 'endpoint.MemTotal',
+    'mem': 'endpoint.MemTotal'
 }

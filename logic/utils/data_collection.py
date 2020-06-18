@@ -6,18 +6,22 @@ import numpy as np
 from scipy import interpolate
 
 
-def retrieve_from_extern(data, keys, format_, t0, calc=None):
+def retrieve_from_extern(data, keys, format_, t0, calc=None, no_time=False):
     """ helper function retrieving one measurement,
             doing formatting and calculating
     """
     k = keys[0]
     res = []
     time = []
+    
+    if no_time:
+        time = np.arange(1, len(data), 1)
     for i, meas in enumerate(data[k]):
         formatted = float(meas if not format_ else format_(meas))
         sol = [calc(formatted)] if calc else [formatted]
         res.append(sol[0])
-        time.append(data['time'][i] - t0)
+        if not no_time:
+            time.append(data['time'][i] - t0)
     return time, res
 
 
@@ -81,6 +85,11 @@ def process_data(res, t, t_meas, y, synthetic_t0=False):
             y_ip = np.round(ip(t), decimals=2)
     else:
         y_ip = y * len(t)
+         
+    if res.get('avg_weigh_lower', True):
+        weighted_avg = weighted_average_focus_high(np.array(y)*res.get('avg_multiplier', 1))/res.get('avg_multiplier', 1)
+    else:
+        weighted_avg = weighted_average_focus_low(np.array(y)*res.get('avg_multiplier', 1))/res.get('avg_multiplier', 1)
 
     res['t'] = t_meas
     res['measurement'] = y
@@ -91,7 +100,7 @@ def process_data(res, t, t_meas, y, synthetic_t0=False):
         res['min'] = np.min(y)
         res['max'] = np.max(y)
         res['mean'] = np.mean(y, dtype=np.float64)
-        res['weighted_avg'] = weighted_average_focus_high(y)
+        res['weighted_avg'] =  weighted_avg
         res['median'] = np.median(y)
         res['std'] = np.std(y, dtype=np.float64)
 
@@ -118,7 +127,7 @@ def collect_data(data, meas, t):
             for index, item in enumerate(group_items):
                 if group_key == 'extern':
                     t_meas, y = retrieve_from_extern(item.get('data'), item.get('keys'), item.get(
-                        'format'), t0 if not item.get('t0') else item.get('t0'), item.get('calc'))
+                        'format'), t0 if not item.get('t0') else item.get('t0'), item.get('calc'), item.get('notime', False))
                 else:
                     t_meas = retrieve_from_keys(
                         data, group_key, ['time'], lambda t: t - t0)
@@ -134,7 +143,6 @@ def collect_data(data, meas, t):
             res = cont_cfg
             res['name'] = cont + cont_cfg.get('base_name')
             res['export_name'] =  cont + '_' + data_key
-
             t_meas, y = retrieve_from_containers(data, base_key, cont_id, [data_key],
                                                 cont_cfg.get('format'), t0 if not cont_cfg.get('t0') else cont_cfg.get('t0'),
                                                 cont_cfg.get('calc'))
@@ -163,6 +171,8 @@ def weighted_average_focus_high(x):
     weights = weight_function(x)
     total_weight = np.sum(weights)
     total = np.sum(weights)
+    if total == 0:
+        return 0
     return total / total_weight
 
 def weighted_average_focus_low(x):
@@ -170,6 +180,8 @@ def weighted_average_focus_low(x):
     weights = weight_function(-x+100*np.ones(len(x)))
     total_weight = np.sum(weights)
     total = np.sum(weights * x)
+    if total == 0:
+        return 0
     return total / total_weight
 
 

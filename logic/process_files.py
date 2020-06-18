@@ -8,6 +8,7 @@ from secrets import APP_SECRET, APP_ID
 
 import numpy as np
 import requests
+import os
 
 from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
@@ -15,7 +16,7 @@ from files.upload_file import upload_file, upload_summary
 from .utils.analyze_rosbag import run
 from .utils.data_collection import collect_data, collect_meta
 from .utils.export import export_json, export_summary_json
-from .config.master19 import meta, measurements
+from .config.config import meta, measurements
 
 
 def storage2json(filestorage, args):
@@ -60,8 +61,13 @@ def process_files_request(args, hw_bm_file_key=None):
     latencies_bag_req = args['latencies_bag'].read()
 
     botname = diagnostics_json_req['general']['target']
-    bagname = 'temp_%s.bag' % bm_uuid
+    bagname = 'temp/temp_bags/temp_%s.bag' % bm_uuid
     filename = '%s.json' % bm_uuid
+
+    try:
+        os.makedirs(os.path.dirname(bagname))
+    except:
+        pass
 
     try:
         #analyze rosbag
