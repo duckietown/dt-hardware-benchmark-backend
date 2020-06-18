@@ -23,14 +23,12 @@ def upload_file(content, file_name):
         if not os.path.exists(directory):
             os.makedirs(directory)
         with open(file_path, 'w' if type(content) is str else 'wb') as file:
-            print(file_name)
             file.write(content)
         
     else:
         s3 = boto3.resource('s3')
         try:
             response = s3.Object('hwbenchmark', file_name).put(Body=content)
-            print(response)
         except ClientError as exc:
             logging.error(exc)
             return False

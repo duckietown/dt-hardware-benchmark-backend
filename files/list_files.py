@@ -93,7 +93,6 @@ def get_file(filename):
         try:
             with open(file_path, 'r') as file:
                 res = file.read()
-                print(res)
                 return res
         except:
             return False

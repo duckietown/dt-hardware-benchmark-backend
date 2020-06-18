@@ -91,6 +91,24 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'unit': '?',
                 },
             ],
+            'containers_cfg': [ 
+                {
+                    'base_name' : ' Threads',
+                    'ylabel': 'Threads',
+                    'keys': 'process_stats.nthreads',
+                    'unit': '#',
+                },
+
+                {
+                    'base_name' : ' CPU in Percent',
+                    'ylabel': 'CPU',
+                    'keys': 'container_stats.pcpu',
+                    'unit': '%',
+                },            
+            ]
+        }
+    }
+"""
             'process': [
                 {
                     'name': 'Portainer Threads',
@@ -298,9 +316,9 @@ def measurements(data_latency, data_segments, data_sd_card):
                 # },
             ]
         }
-    }
+    }"""
 
-    """measurements = {
+"""measurements = {
         'diagnostics': {
             'resources_stats': [
                 {

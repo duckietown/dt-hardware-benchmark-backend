@@ -47,7 +47,6 @@ def process_files_request(args, hw_bm_file_key=None):
         # Get Data from diagnostics API
         url = '{}/json?app_id={}&app_secret={}&database={}&key={}'.format(
             DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key)
-        print(url)
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
 
@@ -79,8 +78,6 @@ def process_files_request(args, hw_bm_file_key=None):
                 bm_buffer,
                 200),
             decimals=2)
-
-        print(meta_req)
 
         #prepare saving of data.
         collected_meta = collect_meta(
