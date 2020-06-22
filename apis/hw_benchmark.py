@@ -78,7 +78,7 @@ hw_bm_config = EndpointConfiguration(api, 'files', HWBenchmarkSchema)
 class HardwareBenchmarkFilesEndpoint(Resource):
     """ Endpoint for Hardware Benchmark Files
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     # @api.doc(params=queryDocumentation)
     @api.expect(get_parser)
@@ -106,13 +106,13 @@ class HardwareBenchmarkFilesEndpoint(Resource):
 class HardwareBenchmarkFilesEndpointFromDiagnostics(Resource):
     """ Endpoint for Hardware Benchmark Files retrieving the data from the Diagnostics API
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     @api.expect(upload_parser)
     def post(self, hw_bm_file_key):
         """POST-Request to upload every file used for the BM
         Returns:
-            dict: resulkt and corresponding uuid
+            dict: result and corresponding uuid
         """
         args = upload_parser.parse_args()
         uuid = process_files_request(args, hw_bm_file_key)
@@ -124,7 +124,7 @@ class HardwareBenchmarkFilesEndpointFromDiagnostics(Resource):
 class HardwareBenchmarkFilesEndpointById(Resource):
     """ Endpoint for Hardware Benchmark Files specified by bm_uuid
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     def get(self, uuid):
         """ GET-Request for uploaded files by uuid
@@ -139,7 +139,7 @@ class HardwareBenchmarkFilesEndpointById(Resource):
 class HardwareBenchmarkImagesEndpointById(Resource):
     """ Endpoint for Hardware Benchmark Images
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     def get(self, uuid):
         """ GET-Request for BM matplotlib images
@@ -156,7 +156,7 @@ hw_bm_score_config = EndpointConfiguration(api, 'score', HWBenchmarkSchema)
 class HardwareBenchmarkScoreEndpoint(Resource):
     """ Endpoint for Hardware Benchmark overall Score
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     def get(self):
         """ GET-Request for BM-Overall Score
@@ -170,7 +170,7 @@ hw_bm_meta_config = EndpointConfiguration(api, 'meta', HWBenchmarkSchema)
 class HardwareBenchmarkMetaEndpoint(Resource):
     """ Endpoint for Hardware Benchmark Meta
     Extends
-        Resource (Resplus)
+        Resource (Restplus)
     """
     def get(self):
         """ GET-Request for BM-Meta

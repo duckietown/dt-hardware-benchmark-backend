@@ -12,10 +12,11 @@ def calc_single(meas, data):
         weight = element['weight']
         _format = element['format']
 
-        weights += weight
-        av = _format(data[bm_key]['weighted_avg']) * weight
-        average += min(100, max(0, av))
-        rel_std += data[bm_key]['std'] / data[bm_key]['avg'] * weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight
+        if data[bm_key]['weighted_avg']:
+            weights += weight
+            av = _format(data[bm_key]['weighted_avg']) * weight
+            average += min(100, max(0, av))
+            rel_std += data[bm_key]['std'] / data[bm_key]['avg'] * weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight
 
     average /= weights
     rel_std /= weights

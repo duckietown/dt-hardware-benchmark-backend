@@ -5,6 +5,7 @@ import json
 import numpy as np
 from scipy import interpolate
 import copy
+import math
 
 
 def retrieve_from_extern(data, keys, format_, t0, calc=None, no_time=False):
@@ -92,13 +93,17 @@ def process_data(res, t, t_meas, y, synthetic_t0=False):
 
     res_multi = res.get('avg_multiplier', 1)
 
+    weighted_avg = 0
     try:
         if not res.get('avg_weigh_lower', False):
             weighted_avg = weighted_average_focus_high(np.array(y)*res_multi)/res_multi
         else:
             weighted_avg = weighted_average_focus_low(np.array(y)*res_multi)/res_multi
     except:
-        weighted_avg = np.nan
+        weighted_avg = None
+
+    if np.isnan(weighted_avg):
+        weighted_avg = None
 
     res['t'] = t_meas
     res['measurement'] = y
@@ -126,9 +131,6 @@ def collect_data(data, meas, t):
         search_key.remove('process')
     except ValueError:
         pass
-
-    with open("testrr.json", "w+") as file:
-        file.write(json.dumps(data))
 
     t0 = data['general']['time']
     for group_key, group_items in meas.items():

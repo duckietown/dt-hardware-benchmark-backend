@@ -50,9 +50,6 @@ def process_files_request(args, hw_bm_file_key=None):
             DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key)
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
-
-        with open('test.json', 'w+') as file:
-            file.write(json.dumps(diagnostics_json_req))
             
     #read all bm data submitted
     meta_json_req = storage2json('meta_json', args)
