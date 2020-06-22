@@ -108,7 +108,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                 {
                     'base_name': ' CPU in Percent',
                     'ylabel': 'CPU',
-                    'keys': 'container_stats.pcpu',
+                    'keys': 'process_stats.pcpu',
                     'unit': '%',
                 }
             ],
@@ -168,4 +168,31 @@ meta = {
     'duration': 'general.duration',
     'cores': 'endpoint.NCPU',
     'mem': 'endpoint.MemTotal'
+}
+
+averages = {
+    'Health': [
+        {'name': 'status_tribool', 'weight': 1, 'format': lambda x: (2-x)*50},
+        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000-x)/20},
+        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120-x)},
+        {'name': 'throttling_bool', 'weight': 1, 'format': lambda x: (1-x)*100},
+    ], 
+    'Engineering': [
+        {'name': 'sd_card_read_speed', 'weight': 1, 'format': lambda x: (50-x)*2},
+        {'name': 'sd_card_write_speed', 'weight': 1, 'format': lambda x: (50-x)*2},
+        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120-x)},
+        {'name': 'cpu_p', 'weight': 1, 'format': lambda x: (100-x)},
+        {'name': 'ram_p', 'weight': 1, 'format': lambda x: (100-x)},
+        {'name': 'swap_p', 'weight': 1, 'format': lambda x: (100-x)},
+    ],
+    'Lane following': [
+        {'name': 'ldn_segments', 'weight': 1, 'format': lambda x: (100-x)},
+        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000-x)/20},
+        {'name': 'cpu_p', 'weight': 0.5, 'format': lambda x: (100-x)},
+        {'name': 'ram_p', 'weight': 0.5, 'format': lambda x: (100-x)},
+    ], 
+    'Container': [
+        {'name': 'nthreads', 'weight': 1, 'format': lambda x: (100-x)},
+        {'name': 'pcpu', 'weight': 1, 'format': lambda x: (100-x)},
+    ], 
 }

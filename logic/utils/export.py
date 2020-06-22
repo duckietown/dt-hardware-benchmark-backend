@@ -31,18 +31,17 @@ def export_json(meas, meta, t):
             for key, value in item.items():
                 if not callable(value) and not key == 'data':
                     current[key] = value
-
             res[item['export_name']] = current
     assembled = {'meta': meta, 'measurements': res}
     return json.dumps(assembled, cls=NumpyArrayEncoder)
 
 
-def export_summary_json(meas, meta, overall):
+def export_summary_json(meas, meta):
     """exports measurements as json string"""
     res = {}
     for _, group_items in meas.items():
         for item in group_items:
             res[item['export_name']] = {
-                'avg': item['mean'], 'std': item['std'], 'weighted_avg': item['weighted_avg']}
-    assembled = {'meta': meta, 'summary': res, 'overall': overall}
+                'avg': item.get('mean'), 'std': item.get('std'), 'weighted_avg': item.get('weighted_avg')}
+    assembled = {'meta': meta, 'summary': res}
     return json.dumps(assembled, cls=NumpyArrayEncoder)

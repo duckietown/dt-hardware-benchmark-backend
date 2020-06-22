@@ -9,6 +9,8 @@ docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url 
 docker run -dit -p 5000:5000 -e LOCAL=true -v/data:/~/data bm_backend
 ```
 
+to see the API Documentation go to `localhost:5000`
+
 ## Send data from CLI
 purt meta in a file e.g data.json
 ```json

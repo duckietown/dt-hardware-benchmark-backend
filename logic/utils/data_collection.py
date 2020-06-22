@@ -4,6 +4,7 @@ import operator
 import json
 import numpy as np
 from scipy import interpolate
+import copy
 
 
 def retrieve_from_extern(data, keys, format_, t0, calc=None, no_time=False):
@@ -75,6 +76,9 @@ def retrieve_from_containers(
 
 def process_data(res, t, t_meas, y, synthetic_t0=False):
 
+
+    res = copy.deepcopy(res)
+
     if len(t_meas) > 1:
         if not res.get('ip'):
             # set up cubic spline interpolation
@@ -85,11 +89,16 @@ def process_data(res, t, t_meas, y, synthetic_t0=False):
             y_ip = np.round(ip(t), decimals=2)
     else:
         y_ip = y * len(t)
-         
-    if res.get('avg_weigh_lower', True):
-        weighted_avg = weighted_average_focus_high(np.array(y)*res.get('avg_multiplier', 1))/res.get('avg_multiplier', 1)
-    else:
-        weighted_avg = weighted_average_focus_low(np.array(y)*res.get('avg_multiplier', 1))/res.get('avg_multiplier', 1)
+
+    res_multi = res.get('avg_multiplier', 1)
+
+    try:
+        if not res.get('avg_weigh_lower', False):
+            weighted_avg = weighted_average_focus_high(np.array(y)*res_multi)/res_multi
+        else:
+            weighted_avg = weighted_average_focus_low(np.array(y)*res_multi)/res_multi
+    except:
+        weighted_avg = np.nan
 
     res['t'] = t_meas
     res['measurement'] = y
@@ -135,20 +144,22 @@ def collect_data(data, meas, t):
                                         item.get('format'), item.get('calc'))
                 meas[group_key][index] = process_data(meas[group_key][index], t, t_meas, y, item.get('t0'))
 
+    #collecting data fdrom all containers or processes
+    meas['containers'] = []
     for cont_cfg in meas['containers_cfg']:
-        meas['containers'] = []
-        base_key = cont_cfg.get('keys').split('.')[0]
-        data_key = cont_cfg.get('keys').split('.')[1]
+        base_key = str(cont_cfg.get('keys').split('.')[0])
+        data_key = str(cont_cfg.get('keys').split('.')[1])
         for cont_id, cont in data['containers'].items():
-            res = cont_cfg
-            res['name'] = cont + cont_cfg.get('base_name')
+            res = copy.deepcopy(cont_cfg)
+            res['name'] = cont + res.get('base_name')
             res['export_name'] =  cont + '_' + data_key
-            t_meas, y = retrieve_from_containers(data, base_key, cont_id, [data_key],
-                                                cont_cfg.get('format'), t0 if not cont_cfg.get('t0') else cont_cfg.get('t0'),
-                                                cont_cfg.get('calc'))
-
-            meas['containers'].append(process_data(res, t, t_meas, y, cont_cfg.get('t0')))
+            t_meas, y = retrieve_from_containers(copy.deepcopy(data), base_key, cont_id, [data_key],
+                                                res.get('format'), t0 if not res.get('t0') else res.get('t0'),
+                                                res.get('calc'))
+            res = process_data(res, t, t_meas, y, res.get('t0'))
+            meas['containers'].append(res)
             
+    del meas['containers_cfg']
     return meas
 
 # {"bot_type":"DB18p4","battery_type":"Old Alu","release":"master19"}
@@ -163,14 +174,14 @@ def weight_function(x):
     """
     a = 7.91E-4
     b = 1.732
-    return np.exp(a * np.array(x)**b)
+    return np.exp(a * (np.array(x)**b))
 
 
 def weighted_average_focus_high(x):
     """Calculates weighted average"""
     weights = weight_function(x)
     total_weight = np.sum(weights)
-    total = np.sum(weights)
+    total = np.sum(weights * x)
     if total == 0:
         return 0
     return total / total_weight

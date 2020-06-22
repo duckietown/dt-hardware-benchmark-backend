@@ -10,6 +10,8 @@ from sql.summary import Summary
 import random
 import os
 
+from logic.calculate_score import score 
+
 
 def list_files(page=None):
     """Lists all files and returns the amout. WIP: summary definitily needs to be moved to a mysql-db
@@ -49,12 +51,11 @@ def list_files(page=None):
 
                     },
                     'summary': res.summary,
-                    'overall': res.overall
+                    'overall': score(json.loads(res.summary))
                 },
                 'uuid':  res.uuid,
                 'last_modified': res.created.isoformat()
             }
-            temp['body']['overall'] = [{'score': random.randint(0, 100), 'name': 'Eng.'}, {'score':  random.randint(0, 100), 'name': 'SW/HW'}]
             data.append(temp)
 
         ret = {

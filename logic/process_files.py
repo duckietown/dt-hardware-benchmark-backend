@@ -40,7 +40,7 @@ def process_files_request(args, hw_bm_file_key=None):
         hw_bm_file_key (string, optional): Key to . Defaults to None.
     """
 
-    bm_uuid = uuid.uuid1()
+    bm_uuid = uuid.uuid4()
 
     if hw_bm_file_key is None:
         diagnostics_json_req = storage2json('diagnostics_json', args)
@@ -96,12 +96,11 @@ def process_files_request(args, hw_bm_file_key=None):
         collected_data = collect_data(
             diagnostics_json_req, measurements(
                 lat, segs, sd_card_json_req)['diagnostics'], t)
-        overall = [{'name': 'CPU', 'score': 100}, {'name': 'Ram', 'score': 20}]
 
         #upload
         content = export_json(collected_data, collected_meta, t)
         upload_file(content, 'meas/' + filename)
-        summary = export_summary_json(collected_data, collected_meta, overall)
+        summary = export_summary_json(collected_data, collected_meta)
         upload_summary(bm_uuid, json.loads(summary))
 
         if args['localization_bag'] is not None:

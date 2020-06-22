@@ -35,12 +35,11 @@ def upload_file(content, file_name):
         return True
 
 def upload_summary(uuid, summary):
-    s = Summary(uuid=str(uuid), 
+    s = Summary(uuid=str(uuid),
                 bot_type=summary['meta']['bot_type'],
                 battery_type=summary['meta']['battery_type'],
                 release=summary['meta']['release'],
                 target=summary['meta']['target'],
-                overall=json.dumps(summary['overall']),
                 summary=json.dumps(summary['summary']))
     db.session.add(s)
     db.session.commit()
