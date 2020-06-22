@@ -1,14 +1,14 @@
 """Handling communication to s3 in order to retrieve files"""
 import logging
 from math import ceil
+import os
 from operator import attrgetter
 import json
 import subprocess
 import boto3
 from botocore.exceptions import ClientError
 from sql.summary import Summary
-import random
-import os
+from logic.overall_average import calc_overall_average
 
 from logic.calculate_score import score 
 
@@ -24,7 +24,6 @@ def list_files(page=None):
     """
 
     s3 = boto3.resource('s3')
-    bucket = s3.Bucket('hwbenchmark')
 
     page = 0 if page is None else int(page)
 
@@ -37,10 +36,10 @@ def list_files(page=None):
         query = query.order_by(Summary.created)
         query = query.limit(perPage).offset(perPage*(page-1))
         resultsOnPage = query.count()
-        
+        overall_average = calc_overall_average()
         data = []
-
         for res in query:
+            summary = json.loads(res.summary)
             temp = {
                 'body': {
                     'meta': {
@@ -50,8 +49,8 @@ def list_files(page=None):
                         'target': res.target
 
                     },
-                    'summary': res.summary,
-                    'overall': score(json.loads(res.summary))
+                    'summary': summary,
+                    'overall': score(summary)
                 },
                 'uuid':  res.uuid,
                 'last_modified': res.created.isoformat()

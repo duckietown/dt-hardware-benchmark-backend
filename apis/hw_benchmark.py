@@ -5,6 +5,7 @@ from werkzeug.datastructures import FileStorage
 
 from schemas.hw_benchmark import HWBenchmarkSchema
 from logic.process_files import process_files_request
+from logic.overall_average import calc_overall_average
 from logic.utils.create_plots import render_image
 from files.list_files import list_files, get_file
 
@@ -150,10 +151,21 @@ class HardwareBenchmarkImagesEndpointById(Resource):
 
         return res
 
+hw_bm_score_config = EndpointConfiguration(api, 'score', HWBenchmarkSchema)
+@api.route('/' + hw_bm_score_config.path)
+class HardwareBenchmarkScoreEndpoint(Resource):
+    """ Endpoint for Hardware Benchmark overall Score
+    Extends
+        Resource (Resplus)
+    """
+    def get(self):
+        """ GET-Request for BM-Overall Score
+        Returns:
+            score of average over all bm scores
+        """
+        return calc_overall_average(), 200
 
 hw_bm_meta_config = EndpointConfiguration(api, 'meta', HWBenchmarkSchema)
-
-
 @api.route('/' + hw_bm_meta_config.path)
 class HardwareBenchmarkMetaEndpoint(Resource):
     """ Endpoint for Hardware Benchmark Meta

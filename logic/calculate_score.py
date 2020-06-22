@@ -35,9 +35,14 @@ def calc_container(meas, data):
         for key, item in data.items():
             if bm_key in key:
                 weights += weight
-                av = _format(data[key]['weighted_avg']) * weight
+                av = _format(data[key]['weighted_avg']) * weight if data[key]['weighted_avg'] is not None else 0
                 average += min(100, max(0, av))
-                rel_std += data[key]['std'] / data[key]['avg'] * weight if data[key]['avg'] != 0 else data[key]['std'] * weight
+                if data[key]['avg'] != 0 and data[key]['avg'] and data[key]['std']:
+                    rel_std += data[key]['std'] / data[key]['avg'] * weight 
+                elif data[key]['std'] is not None:
+                    rel_std += data[key]['std'] * weight
+                else:
+                    rel_std += 0
 
     average /= weights
     rel_std /= weights

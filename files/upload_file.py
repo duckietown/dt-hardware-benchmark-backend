@@ -40,6 +40,7 @@ def upload_summary(uuid, summary):
                 battery_type=summary['meta']['battery_type'],
                 release=summary['meta']['release'],
                 target=summary['meta']['target'],
-                summary=json.dumps(summary['summary']))
+                summary=json.dumps(summary['summary']),
+                accepted=True) #hardcoded for the moment TODO
     db.session.add(s)
     db.session.commit()
