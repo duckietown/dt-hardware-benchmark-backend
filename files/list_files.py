@@ -85,8 +85,7 @@ def get_file(filename):
         file_path = '/data/' + filename
         try:
             with open(file_path, 'r') as file:
-                res = file.read()
-                return res
+                return json.load(file)
         except BaseException:
             return False
     else:
