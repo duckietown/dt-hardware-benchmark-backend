@@ -1,6 +1,7 @@
 """HW Benchmark schema, will be used for Mysqldb- communication"""
 from marshmallow import Schema, fields
 
+
 class HWBenchmarkSchema(Schema):
     """Expected schema, WIP
     """

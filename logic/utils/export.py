@@ -41,7 +41,7 @@ def export_summary_json(meas, meta):
     res = {}
     for _, group_items in meas.items():
         for item in group_items:
-            res[item['export_name']] = {
-                'avg': item.get('mean'), 'std': item.get('std'), 'weighted_avg': item.get('weighted_avg')}
+            res[item['export_name']] = {'avg': item.get('mean'), 'std': item.get(
+                'std'), 'weighted_avg': item.get('weighted_avg')}
     assembled = {'meta': meta, 'summary': res}
     return json.dumps(assembled, cls=NumpyArrayEncoder)

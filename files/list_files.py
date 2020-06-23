@@ -2,19 +2,16 @@
 import logging
 from math import ceil
 import os
-from operator import attrgetter
 import json
 import subprocess
 import boto3
 from botocore.exceptions import ClientError
 from sql.summary import Summary
-from logic.overall_average import calc_overall_average
-
-from logic.calculate_score import score 
+from logic.calculate_score import score
 
 
 def list_files(page=None):
-    """Lists all files and returns the amout. WIP: summary definitily needs to be moved to a mysql-db
+    """Lists all files and returns the amout.
 
     Args:
         page (int): page to be displayed
@@ -23,20 +20,17 @@ def list_files(page=None):
         dict: 25 summarys of the files
     """
 
-    s3 = boto3.resource('s3')
-
     page = 0 if page is None else int(page)
 
     try:
         # for file in my_bucket.objects.filter():
-        perPage = 25
+        per_page = 25
 
         query = Summary.query
-        totalResults = query.count()
+        total_results = query.count()
         query = query.order_by(Summary.created)
-        query = query.limit(perPage).offset(perPage*(page-1))
-        resultsOnPage = query.count()
-        overall_average = calc_overall_average()
+        query = query.limit(per_page).offset(per_page * (page - 1))
+        results_on_page = query.count()
         data = []
         for res in query:
             summary = json.loads(res.summary)
@@ -52,7 +46,7 @@ def list_files(page=None):
                     'summary': summary,
                     'overall': score(summary)
                 },
-                'uuid':  res.uuid,
+                'uuid': res.uuid,
                 'last_modified': res.created.isoformat()
             }
             data.append(temp)
@@ -62,11 +56,11 @@ def list_files(page=None):
             'meta': {
                 'page': page,
                 'last_page': ceil(
-                    totalResults /
+                    total_results /
                     25),
-                'total': totalResults,
-                'results_on_this_page': resultsOnPage}
-                }
+                'total': total_results,
+                'results_on_this_page': results_on_page}
+        }
         return ret
 
     except ClientError as exc:
@@ -87,16 +81,15 @@ def get_file(filename):
 
     # Upload the file
 
-
     if os.getenv('LOCAL'):
-        file_path = '/data/'+filename
+        file_path = '/data/' + filename
         try:
             with open(file_path, 'r') as file:
                 res = file.read()
                 return res
-        except:
+        except BaseException:
             return False
-    else:        
+    else:
         s3 = boto3.resource('s3')
 
         try:

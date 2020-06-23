@@ -3,7 +3,7 @@ from flask_restplus import fields
 import marshmallow
 
 
-def schemaToDict(schema):
+def schema_to_dict(schema):
     """Converts schema to dict"""
     sc_fields = schema._declared_fields
     model_info = {}

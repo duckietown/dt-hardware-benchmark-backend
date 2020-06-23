@@ -1,6 +1,11 @@
+"""Collection of Settings how the Bm is calculated"""
+
 from scipy import interpolate
 
+
 def measurements(data_latency, data_segments, data_sd_card):
+    """Returns config of the measurements
+    """
     return {
         'diagnostics': {
             'resources_stats': [
@@ -43,7 +48,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'unit': ' ',
                     'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
                     'avg_multiplier': 50,
-                    #'avg_weigh_lower': True
+                    # 'avg_weigh_lower': True
                 },
                 {
                     'name': 'CPU Temperature',
@@ -63,7 +68,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'export_name': 'cpu_core_v',
                     'unit': 'V',
                     'avg_weigh_lower': True,
-                    'avg_multiplier': 100/1.5,
+                    'avg_multiplier': 100 / 1.5,
                 },
                 {
                     'name': 'Throttling',
@@ -84,7 +89,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['clock.core'],
                     'export_name': 'cpu_core_clock',
                     'unit': 'MHz',
-                    'avg_multiplier': 1/6,
+                    'avg_multiplier': 1 / 6,
                 },
                 {
                     'name': 'ARM Clock',
@@ -94,7 +99,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'keys': ['clock.arm'],
                     'export_name': 'cpu_arm_clock',
                     'unit': '?',
-                    'avg_multiplier': 1/20,
+                    'avg_multiplier': 1 / 20,
                 },
             ],
             'containers_cfg': [
@@ -118,7 +123,8 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'data': data_latency,
                     'ylabel': 'Latency',
                     'ylim': (0, 1000),
-                    't0': min(data_latency.get('time')) if len(data_latency.get('time', [])) > 0 else 0,
+                    't0': min(data_latency.get('time')) if len(
+                        data_latency.get('time', [])) > 0 else 0,
                     'keys': ['meas'],
                     'export_name': 'ldn_latency',
                     'unit': 'ms',
@@ -129,12 +135,13 @@ def measurements(data_latency, data_segments, data_sd_card):
                     'name': 'Detected Segments',
                     'data': data_segments,
                     'ylabel': 'Segments',
-                    't0': min(data_segments.get('time')) if len(data_segments.get('time', [])) > 0 else 0,
+                    't0': min(data_segments.get('time')) if len(
+                        data_segments.get('time', [])) > 0 else 0,
                     'keys': ['meas'],
                     'export_name': 'ldn_segments',
                     'unit': '#',
                     'ip': lambda x, y: interpolate.interp1d(x, y, bounds_error=False),
-                    'avg_multiplier': 100/75,
+                    'avg_multiplier': 100 / 75,
                 },
                 {
                     'name': 'SD-Card Write Speed',
@@ -162,6 +169,11 @@ def measurements(data_latency, data_segments, data_sd_card):
         },
     }
 
+# Content of meta
+# Setup: meta = {
+#     'export_key': 'key_in_diagnostics_json'
+# }
+
 meta = {
     'time': 'general.time_iso',
     'target': 'general.target',
@@ -170,29 +182,37 @@ meta = {
     'mem': 'endpoint.MemTotal'
 }
 
+# Weights of specific points in resp. averages
+# Setup: meta = {
+#     'BM_Score_Name': [
+#         {'name': 'export_key', 'weight': weight, 'format':
+#           lambda_function_being_callend_onto_average},
+#     ]
+# }
+
 averages = {
     'Health': [
-        {'name': 'status_tribool', 'weight': 1, 'format': lambda x: (2-x)*50},
-        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000-x)/20},
-        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120-x)},
-        {'name': 'throttling_bool', 'weight': 1, 'format': lambda x: (1-x)*100},
-    ], 
+        {'name': 'status_tribool', 'weight': 1, 'format': lambda x: (2 - x) * 50},
+        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000 - x) / 20},
+        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120 - x)},
+        {'name': 'throttling_bool', 'weight': 1, 'format': lambda x: (1 - x) * 100},
+    ],
     'Engineering': [
-        {'name': 'sd_card_read_speed', 'weight': 1, 'format': lambda x: (50-x)*2},
-        {'name': 'sd_card_write_speed', 'weight': 1, 'format': lambda x: (50-x)*2},
-        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120-x)},
-        {'name': 'cpu_p', 'weight': 1, 'format': lambda x: (100-x)},
-        {'name': 'ram_p', 'weight': 1, 'format': lambda x: (100-x)},
-        {'name': 'swap_p', 'weight': 1, 'format': lambda x: (100-x)},
+        {'name': 'sd_card_read_speed', 'weight': 1, 'format': lambda x: (50 - x) * 2},
+        {'name': 'sd_card_write_speed', 'weight': 1, 'format': lambda x: (50 - x) * 2},
+        {'name': 'cpu_temp_c', 'weight': 1, 'format': lambda x: (120 - x)},
+        {'name': 'cpu_p', 'weight': 1, 'format': lambda x: (100 - x)},
+        {'name': 'ram_p', 'weight': 1, 'format': lambda x: (100 - x)},
+        {'name': 'swap_p', 'weight': 1, 'format': lambda x: (100 - x)},
     ],
     'Lane following': [
-        {'name': 'ldn_segments', 'weight': 1, 'format': lambda x: (100-x)},
-        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000-x)/20},
-        {'name': 'cpu_p', 'weight': 0.5, 'format': lambda x: (100-x)},
-        {'name': 'ram_p', 'weight': 0.5, 'format': lambda x: (100-x)},
-    ], 
+        {'name': 'ldn_segments', 'weight': 1, 'format': lambda x: (100 - x)},
+        {'name': 'ldn_latency', 'weight': 1, 'format': lambda x: (2000 - x) / 20},
+        {'name': 'cpu_p', 'weight': 0.5, 'format': lambda x: (100 - x)},
+        {'name': 'ram_p', 'weight': 0.5, 'format': lambda x: (100 - x)},
+    ],
     'Container': [
-        {'name': 'nthreads', 'weight': 1, 'format': lambda x: (100-x)},
-        {'name': 'pcpu', 'weight': 1, 'format': lambda x: (100-x)},
-    ], 
+        {'name': 'nthreads', 'weight': 1, 'format': lambda x: (100 - x)},
+        {'name': 'pcpu', 'weight': 1, 'format': lambda x: (100 - x)},
+    ],
 }

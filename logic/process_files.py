@@ -1,14 +1,14 @@
 """ Procvesses all bm realted files and saves them to the given loaction, mainly in s3
 """
+import os
 import uuid
 import json
 import subprocess
 
 from secrets import APP_SECRET, APP_ID
 
-import numpy as np
 import requests
-import os
+import numpy as np
 
 from config import DIAGNOSTICS_DATABASE, DIAGNOSTICS_BASE_URL
 
@@ -50,8 +50,8 @@ def process_files_request(args, hw_bm_file_key=None):
             DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key)
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
-            
-    #read all bm data submitted
+
+    # read all bm data submitted
     meta_json_req = storage2json('meta_json', args)
     sd_card_json_req = storage2json('sd_card_json', args)
     meta_req = json.loads(args['meta'])
@@ -63,11 +63,11 @@ def process_files_request(args, hw_bm_file_key=None):
 
     try:
         os.makedirs(os.path.dirname(bagname))
-    except:
+    except BaseException:
         pass
 
     try:
-        #analyze rosbag
+        # analyze rosbag
         with open(bagname, 'wb') as bag:
             bag.write(latencies_bag_req)
 
@@ -82,7 +82,7 @@ def process_files_request(args, hw_bm_file_key=None):
                 200),
             decimals=2)
 
-        #prepare saving of data.
+        # prepare saving of data.
         collected_meta = collect_meta(
             diagnostics_json_req,
             meta,
@@ -94,7 +94,7 @@ def process_files_request(args, hw_bm_file_key=None):
             diagnostics_json_req, measurements(
                 lat, segs, sd_card_json_req)['diagnostics'], t)
 
-        #upload
+        # upload
         content = export_json(collected_data, collected_meta, t)
         upload_file(content, 'meas/' + filename)
         summary = export_summary_json(collected_data, collected_meta)
@@ -107,7 +107,7 @@ def process_files_request(args, hw_bm_file_key=None):
                 bm_uuid)
 
     finally:
-        #cleanup
+        # cleanup
         subprocess.Popen(["rm", bagname])
 
     return bm_uuid

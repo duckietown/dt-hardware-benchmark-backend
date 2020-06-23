@@ -21,12 +21,19 @@ def display_data(meas, t):
             t_ind_min = (np.abs(t - t_meas[0])).argmin()
             t_ind_max = (np.abs(t - t_meas[-1])).argmin()
 
-            axes[ax_ind].plot(t_meas, item['measurement'], 'o',
-                              t[t_ind_min:t_ind_max], item['measurement_ip'][t_ind_min:t_ind_max],
-                              t, [item['mean']] * len(t),
-                              t, [item['min']] * len(t), ':',
-                              t, [item['max']] * len(t), ':'
-                              )
+            axes[ax_ind].plot(t_meas,
+                              item['measurement'],
+                              'o',
+                              t[t_ind_min:t_ind_max],
+                              item['measurement_ip'][t_ind_min:t_ind_max],
+                              t,
+                              [item['mean']] * len(t),
+                              t,
+                              [item['min']] * len(t),
+                              ':',
+                              t,
+                              [item['max']] * len(t),
+                              ':')
             axes[ax_ind].legend(['measured', 'interpolated', mean_name])
             axes[ax_ind].set_title(item['name'] + " " + item['info'])
             axes[ax_ind].set_ylabel(ylabel)

@@ -12,6 +12,7 @@ from files.list_files import list_files, get_file
 from config import BATTERY_TYPES, BOT_TYPES, RELEASES
 from .template import EndpointConfiguration
 
+# pylint: disable=no-self-use
 
 api = Namespace(
     'hw_benchmark',
@@ -80,7 +81,6 @@ class HardwareBenchmarkFilesEndpoint(Resource):
     Extends
         Resource (Restplus)
     """
-    # @api.doc(params=queryDocumentation)
     @api.expect(get_parser)
     def get(self):
         """ GET-Request for uploaded files
@@ -99,7 +99,8 @@ class HardwareBenchmarkFilesEndpoint(Resource):
         """
         args = frontend_parser.parse_args()
         uuid = process_files_request(args)
-        return {'result': hw_bm_config.path.title() + ' added as' + str(uuid), 'uuid': str(uuid)}, 201
+        return {'result': hw_bm_config.path.title() + ' added as' +
+                          str(uuid), 'uuid': str(uuid)}, 201
 
 
 @api.route('/' + hw_bm_config.path + '/<hw_bm_file_key>')
@@ -116,8 +117,8 @@ class HardwareBenchmarkFilesEndpointFromDiagnostics(Resource):
         """
         args = upload_parser.parse_args()
         uuid = process_files_request(args, hw_bm_file_key)
-        return {'result': hw_bm_config.path.title() + ' added as' + str(uuid), 'uuid': str(uuid)}, 201
-
+        return {'result': hw_bm_config.path.title() + ' added as' +
+                          str(uuid), 'uuid': str(uuid)}, 201
 
 
 @api.route('/' + hw_bm_config.path + '/<uuid>')
@@ -126,6 +127,7 @@ class HardwareBenchmarkFilesEndpointById(Resource):
     Extends
         Resource (Restplus)
     """
+
     def get(self, uuid):
         """ GET-Request for uploaded files by uuid
         Returns:
@@ -141,6 +143,7 @@ class HardwareBenchmarkImagesEndpointById(Resource):
     Extends
         Resource (Restplus)
     """
+
     def get(self, uuid):
         """ GET-Request for BM matplotlib images
         Returns:
@@ -151,13 +154,17 @@ class HardwareBenchmarkImagesEndpointById(Resource):
 
         return res
 
+
 hw_bm_score_config = EndpointConfiguration(api, 'score', HWBenchmarkSchema)
+
+
 @api.route('/' + hw_bm_score_config.path)
 class HardwareBenchmarkScoreEndpoint(Resource):
     """ Endpoint for Hardware Benchmark overall Score
     Extends
         Resource (Restplus)
     """
+
     def get(self):
         """ GET-Request for BM-Overall Score
         Returns:
@@ -165,13 +172,17 @@ class HardwareBenchmarkScoreEndpoint(Resource):
         """
         return calc_overall_average(), 200
 
+
 hw_bm_meta_config = EndpointConfiguration(api, 'meta', HWBenchmarkSchema)
+
+
 @api.route('/' + hw_bm_meta_config.path)
 class HardwareBenchmarkMetaEndpoint(Resource):
     """ Endpoint for Hardware Benchmark Meta
     Extends
         Resource (Restplus)
     """
+
     def get(self):
         """ GET-Request for BM-Meta
         Returns:

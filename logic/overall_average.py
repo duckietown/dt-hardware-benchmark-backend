@@ -1,15 +1,8 @@
-"""Claculating the overall average for alll Benchmarks TODO:definiteley needs to be cached"""
-import logging
-from math import ceil
-import os
-from operator import attrgetter
+"""Calculating the overall average for alll Benchmarks TODO:definiteley needs to be cached"""
 import json
-import subprocess
-import boto3
-from botocore.exceptions import ClientError
 from sql.summary import Summary
 
-from logic.calculate_score import score 
+from logic.calculate_score import score
 
 
 def calc_overall_average():
@@ -21,22 +14,21 @@ def calc_overall_average():
 
     query = Summary.query
     query = query.filter_by(accepted=True)
-    totalResults = query.count()
-    
+    total_results = query.count()
+
     data = []
     first = True
     for res in query:
-        sc = score(json.loads(res.summary))
+        res_score = score(json.loads(res.summary))
         if first:
-            data = sc
+            data = res_score
             first = False
         else:
-            for i, elem in enumerate(sc):
+            for i, elem in enumerate(res_score):
                 data[i]['score'] += elem['score']
 
-    for i in range(len(data)):
-        data[i]['score'] /= totalResults
+    for i, _ in enumerate(data): #in order to prevent weird copyiong errors
+        data[i]['score'] /= total_results
         data[i]['score'] = round(data[i]['score'], 2)
-    
-    return data
 
+    return data
