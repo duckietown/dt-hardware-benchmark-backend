@@ -3,3 +3,10 @@ venv
 __pycacher__/
 .gitignore
 README.md
+.vscode
+.bumpversion.cfg
+.dockerignore
+.pylintrc
+.sample_env
+requirements-dev.txt
+sample_secrets.py
