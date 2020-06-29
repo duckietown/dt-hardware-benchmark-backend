@@ -6,7 +6,7 @@ docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url 
 
 ## Run locally
 ```bash
-docker run -dit -p 5000:5000 -e LOCAL=true -v/data:/~/data bm_backend
+docker run -dit -p 5000:5000 -e LOCAL=true -v /data:/~/data bm_backend
 ```
 
 to see the API Documentation go to `localhost:5000`
