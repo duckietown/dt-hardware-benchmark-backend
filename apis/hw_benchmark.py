@@ -93,9 +93,9 @@ class HardwareBenchmarkFilesEndpoint(Resource):
 
     @api.expect(frontend_parser)
     def post(self):
-        """POST-Request to upload every file used for the BM
+        """POST-Request to upload every file used for a BM (including diagnbostics)
         Returns:
-            dict: resulkt and corresponding uuid
+            dict: success message and corresponding uuid
         """
         args = frontend_parser.parse_args()
         uuid = process_files_request(args)

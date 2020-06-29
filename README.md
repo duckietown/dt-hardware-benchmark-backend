@@ -12,10 +12,6 @@ docker run -dit -p 5000:5000 -e LOCAL=true -v/data:/~/data bm_backend
 to see the API Documentation go to `localhost:5000`
 
 ## Send data from CLI
-purt meta in a file e.g data.json
-```json
-{"bot_type":"DB18p4","battery_type":"Old Alu","release":"master19"}
-```
 E.g
 ```bash
 curl -X POST "http://127.0.0.1:5000/hw_benchmark/files/v1__test__new__autobot14__1589916105" -F "meta={\"bot_type\":\"DB18p4\",\"battery_type\":\"Old Alu\",\"release\":\"master19\"}" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "sd_card_json=@sd_speed.json" -F "latencies_bag=@meas_01/master19_autobot14_01.bag"  -F "meta_json=@meta.json"
