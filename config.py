@@ -2,8 +2,6 @@
 """
 from dotenv import load_dotenv
 
-load_dotenv(verbose=True)
-
 HOST = '0.0.0.0'
 
 DIAGNOSTICS_DATABASE = 'db_log_default'

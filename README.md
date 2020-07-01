@@ -1,7 +1,8 @@
 ## Deploy
 ```bash
 docker build . -t bm_backend
-docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url -e MYSQL_DB=db bm_backend
+docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url -e MYSQL_DB=db 
+-e AWS_SECRET_ACCESS_KEY=aws_key -e AWS_ACCESS_KEY_ID=aws_key_id bm_backend
 ```
 
 ## Run locally
