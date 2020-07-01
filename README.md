@@ -20,7 +20,7 @@ curl -X POST "http://127.0.0.1:5000/hw_benchmark/files/v1__test__new__autobot14_
 
 
 ## Develop in container
-Start Developer Container, attach to said container. (Port 5000 needs to be forwarded)
+Start Developer Container, attach to said container. (Port 5000 needs to be forwarded, can be found in `.devcontainer`)
 in the attached terminal:
 ```bash
 source /opt/ros/kinetic/setup.bash
