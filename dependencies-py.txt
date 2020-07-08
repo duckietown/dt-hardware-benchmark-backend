@@ -15,6 +15,6 @@ matplotlib==3.0.3
 numpy==1.18.5
 scipy==1.4.1
 
-flask_sqlalchemy
+Flask-SQLAlchemy==2.4.3
 
 Werkzeug==0.16.1 #Bear with it until Flask-restplus is fixed
