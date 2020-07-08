@@ -1,12 +1,13 @@
 ## Deploy
 ```bash
 docker build . -t bm_backend
-docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url -e MYSQL_DB=db bm_backend
+docker run -dit -p 5000:5000 -e MYSQL_USER=user -e MYSQL_PW=pw -e MYSQL_URL=url -e MYSQL_DB=db 
+-e AWS_SECRET_ACCESS_KEY=aws_key -e AWS_ACCESS_KEY_ID=aws_key_id bm_backend
 ```
 
 ## Run locally
 ```bash
-docker run -dit -p 5000:5000 -e LOCAL=true -v/data:/~/data bm_backend
+docker run -dit -p 5000:5000 -e LOCAL=true -v /data:/~/data bm_backend
 ```
 
 to see the API Documentation go to `localhost:5000`
@@ -19,7 +20,7 @@ curl -X POST "http://127.0.0.1:5000/hw_benchmark/files/v1__test__new__autobot14_
 
 
 ## Develop in container
-Start Developer Container, attach to said container. (Port 5000 needs to be forwarded)
+Start Developer Container, attach to said container. (Port 5000 needs to be forwarded, can be found in `.devcontainer`)
 in the attached terminal:
 ```bash
 source /opt/ros/kinetic/setup.bash

@@ -7,12 +7,21 @@ from apis import api
 from config import HOST
 from sql import db
 
+
+CRED = '\033[4;35m'
+CEND = '\033[0m'
+
 DATABASE_URI = ''
 if os.getenv('LOCAL'):
     DATABASE_URI = 'sqlite:////data/hw_bm.db'
+    print(
+        CRED +
+        '\nrunning in local mode, data is saved to and read from /data\n' +
+        CEND)
 else:
     assert (os.getenv('MYSQL_USER') and os.getenv('MYSQL_PW') and os.getenv(
-        'MYSQL_URL') and os.getenv('MYSQL_DB')), "missing env variables"
+        'MYSQL_URL') and os.getenv('MYSQL_DB') and os.getenv('AWS_ACCESS_KEY_ID') 
+        and os.getenv('AWS_SECRET_ACCESS_KEY')), "missing env variables"
     DATABASE_URI = (
         'mysql://' +
         os.getenv('MYSQL_USER') +
@@ -22,6 +31,7 @@ else:
         os.getenv('MYSQL_URL') +
         '/' +
         os.getenv('MYSQL_DB'))
+    print(CRED + '\nrunning in online mode\n' + CEND)
 
 
 app = Flask(__name__)
@@ -33,16 +43,5 @@ db.app = app
 db.create_all()
 api.init_app(app)
 
-CRED = '\033[4;35m'
-CEND = '\033[0m'
-
 if __name__ == '__main__':
-    if os.getenv('LOCAL'):
-        print(
-            CRED +
-            '\nrunning in local mode, data is saved to and read from /data\n' +
-            CEND)
-    else:
-        print(CRED + '\nrunning in online mode\n' + CEND)
-
     app.run(debug=True, host=HOST)

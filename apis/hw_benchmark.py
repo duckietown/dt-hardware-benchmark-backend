@@ -9,7 +9,7 @@ from logic.overall_average import calc_overall_average
 from logic.utils.create_plots import render_image
 from files.list_files import list_files, get_file
 
-from config import BATTERY_TYPES, BOT_TYPES, RELEASES
+from config import BATTERY_TYPES, BOT_TYPES, RELEASES, HUT_VERSIONS
 from .template import EndpointConfiguration
 
 # pylint: disable=no-self-use
@@ -85,7 +85,7 @@ class HardwareBenchmarkFilesEndpoint(Resource):
     def get(self):
         """ GET-Request for uploaded files
         Returns:
-            Array of files: array of the summary of all uploaded files, success
+            Array of files: array of the summary of all uploaded files, specified by the page
         """
         args = get_parser.parse_args()
         return list_files(args['page']), 200
@@ -93,7 +93,7 @@ class HardwareBenchmarkFilesEndpoint(Resource):
 
     @api.expect(frontend_parser)
     def post(self):
-        """POST-Request to upload every file used for a BM (including diagnbostics)
+        """POST-Request to upload every file used for a BM (including diagnostics)
         Returns:
             dict: success message and corresponding uuid
         """
@@ -186,7 +186,7 @@ class HardwareBenchmarkMetaEndpoint(Resource):
     def get(self):
         """ GET-Request for BM-Meta
         Returns:
-            Meta for e.g. dropdown
+            Metadata required by the benchmark
         """
         result = {'dropdowns': [{'name': 'Bot Types',
                                  'key': 'bot_type',
@@ -194,7 +194,19 @@ class HardwareBenchmarkMetaEndpoint(Resource):
                                 {'name': 'Battery Types',
                                  'key': 'battery_type',
                                  'content': BATTERY_TYPES},
+                                {'name': 'Hut version',
+                                 'key': 'hut_version',
+                                 'content': HUT_VERSIONS},
                                 {'name': 'Releases',
                                  'key': 'release',
-                                 'content': RELEASES}]}
+                                 'content': RELEASES}],
+                  'textfields': [{'name': '(Your) Name', 
+                                  'key': 'user',
+                                  'default': 'Tester'},
+                                 {'name': 'Location', 
+                                  'key': 'location',
+                                  'default': 'ETH Zurich'},
+                                 {'name': 'Map Name', 
+                                  'key': 'map_name',
+                                  'default': '3x3 Loop'}] }
         return result, 200
