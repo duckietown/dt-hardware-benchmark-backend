@@ -200,13 +200,13 @@ class HardwareBenchmarkMetaEndpoint(Resource):
                                 {'name': 'Releases',
                                  'key': 'release',
                                  'content': RELEASES}],
-                  'textfields': [{'name': 'User', 
+                  'textfields': [{'name': '(Your) Name', 
                                   'key': 'user',
                                   'default': 'Tester'},
                                  {'name': 'Location', 
                                   'key': 'location',
-                                  'default': 'Tester'},
+                                  'default': 'ETH Zurich'},
                                  {'name': 'Map Name', 
                                   'key': 'map_name',
-                                  'default': 'Tester'}] }
+                                  'default': '3x3 Loop'}] }
         return result, 200
