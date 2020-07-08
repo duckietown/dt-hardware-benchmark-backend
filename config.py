@@ -19,3 +19,4 @@ BOT_TYPES = [
     'DB20',
     'DB21/DBv2']
 RELEASES = ['older/other', 'master19', 'daffy']  # , 'ente' ]
+HUT_VERSIONS = ['v1.0', 'v2.0', 'v2.1']
