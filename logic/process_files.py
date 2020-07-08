@@ -16,7 +16,7 @@ from files.upload_file import upload_file, upload_summary
 from .utils.analyze_rosbag import run
 from .utils.data_collection import collect_data, collect_meta
 from .utils.export import export_json, export_summary_json
-from .config.config import meta, measurements
+from .config.config import meta as metaconfig, measurements
 
 
 def storage2json(filestorage, args):
@@ -85,11 +85,9 @@ def process_files_request(args, hw_bm_file_key=None):
         # prepare saving of data.
         collected_meta = collect_meta(
             diagnostics_json_req,
-            meta,
+            metaconfig,
             meta_json_req,
-            meta_req['bot_type'],
-            meta_req['battery_type'],
-            meta_req['release'])
+            meta_req)
         collected_data = collect_data(
             diagnostics_json_req, measurements(
                 lat, segs, sd_card_json_req)['diagnostics'], t)

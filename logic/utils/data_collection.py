@@ -207,12 +207,9 @@ def weighted_average_focus_low(x):
     return total / total_weight
 
 
-def collect_meta(data, meta_dict, meta_data, bot_type, battery_type, release):
+def collect_meta(data, meta_dict, meta_data, meta_manual):
     """collect metadata"""
-    res = meta_data
-    res['bot_type'] = bot_type
-    res['battery_type'] = battery_type
-    res['release'] = release
+    res = {**meta_data, **meta_manual}
     for key, item in meta_dict.items():
         res[key] = reduce(operator.getitem, item.split('.'), data)
     return res
