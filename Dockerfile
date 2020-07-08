@@ -21,18 +21,17 @@ RUN mkdir -p "${REPO_PATH}"
 
 # install apt dependencies
 COPY ./dependencies-apt.txt "${REPO_PATH}/"
-# CUSTOM
+#CUSTOM
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 python3-virtualenv \
+  && apt-get install -y --no-install-recommends python3 \
+  python3-pip python3-setuptools python3-dev \
     $(awk -F: '/^[^#]/ { print $1 }' dependencies-apt.txt | uniq) \
   && rm -rf /var/lib/apt/lists/*
 
-# CUSTOM
-RUN python3 -m virtualenv --python=/usr/bin/python3 /opt/venv
 # install python dependencies
 COPY ./dependencies-py.txt "${REPO_PATH}/"
 # CUSTOM
-RUN . /opt/venv/bin/activate && pip install -r dependencies-py.txt
+RUN pip3 install -r dependencies-py.txt
 
 # copy the source code
 COPY . "${REPO_PATH}/"
@@ -43,15 +42,10 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     --workspace ${CATKIN_WS_DIR}/
 
 # define launch script
-#CUSTOM
-ENV APPFILE "${REPO_PATH}/app.py"
+ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
 
 # define command
-# CUSTOM
-CMD . /opt/ros/kinetic/setup.sh && . /opt/venv/bin/activate && ls /data && exec python "${APPFILE}" 
-
-#CUSTOM
-VOLUME [ "/data" ]
+CMD ["bash", "-c", "${LAUNCHFILE}"]
 
 # store module name
 LABEL org.duckietown.label.module.type "${REPO_NAME}"
@@ -69,8 +63,8 @@ LABEL org.duckietown.label.base.image "${BASE_IMAGE}:${BASE_TAG}"
 # <== Do not change this code
 # <==================================================
 
-# CUSTOM
 EXPOSE 5000
+VOLUME [ "/data" ]
 
 # maintainer
 LABEL maintainer="Luzian Bieri (luzibier@ethz.ch)"
