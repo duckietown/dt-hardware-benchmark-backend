@@ -90,10 +90,10 @@ def score(data):
     for key, item in averages.items():
         res = calc_single(item,
             data) if key != 'Container' else calc_container(item, data)
-        res = round(res, 2)
+        res = round(res)
         total += res
         score_res.append({'score': res, 'name': key})
 
     score_res.append(
-        {'score': round(total / len(score_res), 2), 'name': 'Total'})
+        {'score': round(total / len(score_res)), 'name': 'Total'})
     return score_res
