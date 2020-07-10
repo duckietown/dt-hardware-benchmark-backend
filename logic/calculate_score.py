@@ -23,12 +23,15 @@ def calc_single(meas, data):
         weight = element['weight']
         _format = element['format']
 
-        if data[bm_key]['weighted_avg']:
+        if data[bm_key]['weighted_avg'] is  None:
+            print('ERROR' + bm_key)
+
+        if data[bm_key]['weighted_avg'] is not None:
             weights += weight
-            avg = _format(data[bm_key]['weighted_avg']) * weight
-            average += min(100, max(0, avg))
-            rel_std += data[bm_key]['std'] / data[bm_key]['avg'] * \
-                weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight
+            avg = _format(data[bm_key]['weighted_avg']) 
+            average += min(100, max(0, avg)) * weight
+            rel_std += abs(data[bm_key]['std'] / data[bm_key]['avg'] * \
+                weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight)
 
     average /= weights
     rel_std /= weights
@@ -56,15 +59,14 @@ def calc_container(meas, data):
         _format = element['format']
 
         for key, _ in data.items():
-            if bm_key in key:
+            if bm_key in key and data[key]['weighted_avg'] is not None:
                 weights += weight
-                avg = _format(data[key]['weighted_avg']) * \
-                    weight if data[key]['weighted_avg'] is not None else 0
-                average += min(100, max(0, avg))
+                avg = _format(data[key]['weighted_avg'])
+                average += min(100, max(0, avg)) * weight
                 if data[key]['avg'] != 0 and data[key]['avg'] and data[key]['std']:
-                    rel_std += data[key]['std'] / data[key]['avg'] * weight
+                    rel_std += abs(data[key]['std'] / data[key]['avg'] * weight)
                 elif data[key]['std'] is not None:
-                    rel_std += data[key]['std'] * weight
+                    rel_std += abs(data[key]['std'] * weight)
                 else:
                     rel_std += 0
 
@@ -85,13 +87,9 @@ def score(data):
     """
     score_res = []
     total = 0
-    calc_container(averages['Container'], data)
     for key, item in averages.items():
-        res = calc_single(
-            item,
-            data) if key != 'Container' else calc_container(
-                item,
-                data)
+        res = calc_single(item,
+            data) if key != 'Container' else calc_container(item, data)
         res = round(res, 2)
         total += res
         score_res.append({'score': res, 'name': key})
