@@ -13,9 +13,8 @@ def retrieve_from_extern(data, keys, format_, t0, calc=None, no_time=False):
     k = keys[0]
     res = []
     time = []
-
     if no_time:
-        time = np.arange(1, len(data), 1)
+        time = np.arange(1, len(data[k])+1, 1)
     for i, meas in enumerate(data[k]):
         formatted = float(meas if not format_ else format_(meas))
         sol = [calc(formatted)] if calc else [formatted]
@@ -103,7 +102,7 @@ def process_data(res, t, t_meas, y, synthetic_t0=False):
                 np.array(y) * res_multi) / res_multi
     except BaseException:
         weighted_avg = None
-
+    # print(res_multi, np.array(y)*res_multi, weighted_avg, weighted_average_focus_high(np.array(y) * res_multi) / res_multi)
     if np.isnan(weighted_avg):
         weighted_avg = None
 
@@ -199,7 +198,7 @@ def weighted_average_focus_high(x):
 
 def weighted_average_focus_low(x):
     """Calculates weighted average"""
-    weights = weight_function(-x + 100 * np.ones(len(x)))
+    weights = weight_function(100 * np.ones(len(x)) - x)
     total_weight = np.sum(weights)
     total = np.sum(weights * x)
     if total == 0:

@@ -63,8 +63,8 @@ LABEL org.duckietown.label.base.image "${BASE_IMAGE}:${BASE_TAG}"
 # <== Do not change this code
 # <==================================================
 
-EXPOSE 5000
 VOLUME [ "/data" ]
+EXPOSE 5000
 
 # maintainer
 LABEL maintainer="Luzian Bieri (luzibier@ethz.ch)"
