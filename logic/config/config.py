@@ -157,7 +157,7 @@ def measurements(data_latency, data_segments, data_sd_card):
                 {
                     'name': 'SD-Card Read Speed',
                     'data': data_sd_card,
-                    'ylabel': 'Write Speed',
+                    'ylabel': 'Read Speed',
                     'notime': True,
                     'keys': ['read'],
                     'export_name': 'sd_card_read_speed',
