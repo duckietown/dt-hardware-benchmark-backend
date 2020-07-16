@@ -30,8 +30,8 @@ def calc_single(meas, data):
             weights += weight
             avg = _format(data[bm_key]['weighted_avg']) 
             average += min(100, max(0, avg)) * weight
-            rel_std += abs(data[bm_key]['std'] / data[bm_key]['avg'] * \
-                weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight)
+            rel_std += min(100, max(abs(data[bm_key]['std'] / data[bm_key]['avg'] * \
+                weight if data[bm_key]['avg'] != 0 else data[bm_key]['std'] * weight)))
 
     average /= weights
     rel_std /= weights
@@ -64,9 +64,9 @@ def calc_container(meas, data):
                 avg = _format(data[key]['weighted_avg'])
                 average += min(100, max(0, avg)) * weight
                 if data[key]['avg'] != 0 and data[key]['avg'] and data[key]['std']:
-                    rel_std += abs(data[key]['std'] / data[key]['avg'] * weight)
+                    rel_std += min(100, max(abs(data[key]['std'] / data[key]['avg'] * weight)))
                 elif data[key]['std'] is not None:
-                    rel_std += abs(data[key]['std'] * weight)
+                    rel_std += min(100, max(abs(data[key]['std'] * weight)))
                 else:
                     rel_std += 0
 
