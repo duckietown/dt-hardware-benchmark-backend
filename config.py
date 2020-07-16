@@ -1,7 +1,5 @@
 """ Config
 """
-from dotenv import load_dotenv
-
 HOST = '0.0.0.0'
 
 DIAGNOSTICS_DATABASE = 'db_log_default'

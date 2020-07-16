@@ -5,8 +5,6 @@ import uuid
 import json
 import subprocess
 
-from secrets import APP_SECRET, APP_ID
-
 import requests
 import numpy as np
 
@@ -47,7 +45,7 @@ def process_files_request(args, hw_bm_file_key=None):
     else:
         # Get Data from diagnostics API
         url = '{}/json?app_id={}&app_secret={}&database={}&key={}'.format(
-            DIAGNOSTICS_BASE_URL, APP_ID, APP_SECRET, DIAGNOSTICS_DATABASE, hw_bm_file_key)
+            DIAGNOSTICS_BASE_URL, os.getenv('APP_ID'), os.getenv('APP_SECRET'), DIAGNOSTICS_DATABASE, hw_bm_file_key)
         req = requests.get(url)
         diagnostics_json_req = req.json()['data']['value']
 

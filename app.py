@@ -7,21 +7,26 @@ from apis import api
 from config import HOST
 from sql import db
 
+LOCAL_VARIABLES = ['APP_ID', 'APP_SECRET']
+ONLINE_VARIABLES = ['APP_ID', 'APP_SECRET', 'MYSQL_USER', 'MYSQL_PW', 'MYSQL_URL', 'MYSQL_DB', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']
 
 CRED = '\033[4;35m'
 CEND = '\033[0m'
 
 DATABASE_URI = ''
+
 if os.getenv('LOCAL'):
+    for e in LOCAL_VARIABLES:
+        assert os.getenv(e),  "missing env variable {}, needed: \n{}".format(e, '\n'.join(LOCAL_VARIABLES)) 
     DATABASE_URI = 'sqlite:////data/hw_bm.db'
     print(
         CRED +
         '\nrunning in local mode, data is saved to and read from /data\n' +
         CEND)
 else:
-    assert (os.getenv('MYSQL_USER') and os.getenv('MYSQL_PW') and os.getenv(
-        'MYSQL_URL') and os.getenv('MYSQL_DB') and os.getenv('AWS_ACCESS_KEY_ID') 
-        and os.getenv('AWS_SECRET_ACCESS_KEY')), "missing env variables"
+    for e in ONLINE_VARIABLES:
+        assert os.getenv(e),  "missing env variable {}, needed: \n{}".format(e, '\n'.join(ONLINE_VARIABLES)) 
+
     DATABASE_URI = (
         'mysql://' +
         os.getenv('MYSQL_USER') +
