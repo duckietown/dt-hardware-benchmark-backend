@@ -1,4 +1,4 @@
-PyYAML==5.3.1
+PyYAML==5.4
 rospkg==1.2.6
 pyrosbag==0.1.3
 
