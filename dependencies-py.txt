@@ -9,7 +9,7 @@ Flask-Cors==3.0.8
 boto3==1.14.1
 botocore==1.17.1
 python-dotenv==0.13.0
-requests==2.23.0
+requests==2.31.0
 
 matplotlib==3.0.3
 numpy==1.18.5
